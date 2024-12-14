@@ -21,3 +21,5 @@ Creation d'un role pour utiliser psql depuis son compte linux local
 ``` ALTER ROLE yourlocaluserrname WITH SUPERUSER ```   
 
 # Status
+
+![Static Badge](https://img.shields.io/badge/Working%20on%20pedago-X-red?style=flat-square)
