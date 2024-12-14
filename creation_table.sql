@@ -1,5 +1,5 @@
 CREATE TABLE user_group (
-  id_group INT PRIMARY KEY,
+  id_group SERIAL PRIMARY KEY,
   nom VARCHAR(20) NOT NULL
 );
 
@@ -11,7 +11,7 @@ CREATE TABLE permission (
 );
 
 CREATE TABLE utilisateur (
-  id_user INT PRIMARY KEY,
+  id_user SERIAL PRIMARY KEY,
   id_group INT,
   username VARCHAR(100) NOT NULL,
   password VARCHAR(100) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE fournisseur (
 );
 
 CREATE TABLE contact (
-  id_contact INT PRIMARY KEY,
+  id_contact SERIAL PRIMARY KEY,
   nom VARCHAR(100) NOT NULL,
   prenom VARCHAR(100),
   numero_tel VARCHAR(20), -- Augmenté à 20 pour plus de flexibilité
@@ -43,7 +43,7 @@ CREATE TABLE contact_fournisseur (
 );
 
 CREATE TABLE produit (
-  id_produit INT PRIMARY KEY,
+  id_produit BIGSERIAL PRIMARY KEY,
   nom VARCHAR(55) NOT NULL,
   description VARCHAR(500), -- Correction du nom de la colonne
   categorie VARCHAR(100)
@@ -59,7 +59,7 @@ CREATE TABLE produit_fournisseur (
 );
 
 CREATE TABLE vente (
-  id_vente INT PRIMARY KEY,
+  id_vente BIGSERIAL PRIMARY KEY,
   id_produit INT, -- Correction du nom de la colonne
   date_vente DATE,
   prix_vente_uni DOUBLE PRECISION NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE vente (
 );
 
 CREATE TABLE contrat (
-  id_contrat INT PRIMARY KEY,
+  id_contrat SERIAL PRIMARY KEY,
   siret CHAR(14),
   id_produit INT,
   prix_uni DOUBLE PRECISION NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE contrat (
 );
 
 CREATE TABLE lot_produit (
-  id_lot_produit INT PRIMARY KEY,
+  id_lot_produit BIGSERIAL PRIMARY KEY,
   id_produit INT,
   prix_vente_uni DOUBLE PRECISION NOT NULL,
   quantite DOUBLE PRECISION NOT NULL,
@@ -88,7 +88,7 @@ CREATE TABLE lot_produit (
 );
 
 CREATE TABLE commande (
-  id_commande INT PRIMARY KEY,
+  id_commande BIGSERIAL PRIMARY KEY,
   id_lot_produit INT,
   siret CHAR(14),
   FOREIGN KEY (siret) REFERENCES fournisseur(siret),
@@ -96,7 +96,7 @@ CREATE TABLE commande (
 );
 
 CREATE TABLE achat (
-  id_achat INT PRIMARY KEY,
+  id_achat BIGSERIAL PRIMARY KEY,
   id_commande INT,
   prix_achat_uni DOUBLE PRECISION NOT NULL,
   date_achat DATE,
