@@ -17,13 +17,19 @@ public class Produit implements IData{
 		this.nom = nom;
 		this.desc = desc;
 		this.cate = categorie;
+		createStruct();
+	}
+	
+	public Produit() {
+		super();
+		createStruct();
 	}
 
-	public int getId_produit() {
+	public int getIdProduit() {
 		return id_produit;
 	}
 
-	public void setId_produit(int id_produit) {
+	public void setIdProduit(int id_produit) {
 		this.id_produit = id_produit;
 	}
 
@@ -52,16 +58,22 @@ public class Produit implements IData{
 	}
 
 	@Override
-	public void getStruct() {
+	public void createStruct() {
 		map = new HashMap<String, fieldType>();
 		
-		map.put("id_produit", fieldType.INT4);
+		map.put("id_produit", fieldType.BIGSERIAL);
 		map.put("nom", fieldType.VARCHAR);
-		map.put("desc", fieldType.VARCHAR);
-		map.put("cate", fieldType.VARCHAR);
+		map.put("description", fieldType.VARCHAR);
+		map.put("categorie", fieldType.VARCHAR);
 		
-		values = "{" + id_produit + ",'" + nom + "','" + desc + "','" + cate + "'}"; 
+		values = "(" + id_produit + ",'" + nom + "','" + desc + "','" + cate + "')"; 
 	}
+	
+	@Override
+	public HashMap<String, fieldType> getStruct() {
+		return map;
+	}
+
 
 	@Override
 	public String getValues() {

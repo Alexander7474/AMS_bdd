@@ -21,11 +21,13 @@ public class Connexion {
                 System.err.println("Erreur connexion :" + e.getMessage());
                 throw e;
             }
+        }else {
+        	System.err.println("Connexion déjà établie");
         }
         return connection;
     }
 
-    public static void fermer() {
+    public static void close() {
         try {
             if (connection != null && !connection.isClosed()) {
                 connection.close();
@@ -43,21 +45,6 @@ public class Connexion {
             System.out.println("Requête exécutée :" + query);
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'exécution :" + e.getMessage());
-        }
-    }
-
-
-    public static void main(String[] args) {
-        try {
-        	System.out.println("version 1");
-            Connection c = Connexion.getConnexion();
-
-            String query = "INSERT INTO produit (nom,description,categorie) VALUES ('chips','desc','cate')";
-            Connexion.executeQuery(query);
-
-            Connexion.fermer();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 }
