@@ -1,9 +1,14 @@
-package data;
+package data.entity;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.IData;
+import data.fieldType;
+
 public class Produit implements IData{
-	private int id_produit;
+	private int idProduit;
 	private String nom;
 	private String desc;
 	private String cate;
@@ -11,26 +16,21 @@ public class Produit implements IData{
 	private String values;
 	private HashMap<String, fieldType> map;
 	
-	public Produit(int id_produit, String nom, String desc, String categorie) {
+	public Produit(int idProduit, String nom, String desc, String categorie) {
 		super();
-		this.id_produit = id_produit;
+		this.idProduit = idProduit;
 		this.nom = nom;
 		this.desc = desc;
 		this.cate = categorie;
 		createStruct();
 	}
-	
-	public Produit() {
-		super();
-		createStruct();
-	}
 
 	public int getIdProduit() {
-		return id_produit;
+		return idProduit;
 	}
 
-	public void setIdProduit(int id_produit) {
-		this.id_produit = id_produit;
+	public void setIdProduit(int idProduit) {
+		this.idProduit = idProduit;
 	}
 
 	public String getNom() {
@@ -61,12 +61,12 @@ public class Produit implements IData{
 	public void createStruct() {
 		map = new HashMap<String, fieldType>();
 		
-		map.put("id_produit", fieldType.BIGSERIAL);
+		map.put("id_produit", fieldType.INT4);
 		map.put("nom", fieldType.VARCHAR);
 		map.put("description", fieldType.VARCHAR);
 		map.put("categorie", fieldType.VARCHAR);
 		
-		values = "(" + id_produit + ",'" + nom + "','" + desc + "','" + cate + "')"; 
+		values = "(id_produit, nom, description, categorie) VALUES (?, ?, ?, ?)"; 
 	}
 	
 	@Override
@@ -91,6 +91,19 @@ public class Produit implements IData{
 	public boolean check(HashMap<String, fieldType> tableStruct) {
 		// TODO Auto-generated method stub
 		return map.equals(tableStruct);
+	}
+	
+	@Override
+	public void composeStatement(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idProduit);
+			statement.setString(2, nom);
+			statement.setString(3, desc);
+			statement.setString(4, cate);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

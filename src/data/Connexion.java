@@ -21,8 +21,6 @@ public class Connexion {
                 System.err.println("Erreur connexion :" + e.getMessage());
                 throw e;
             }
-        }else {
-        	System.err.println("Connexion déjà établie");
         }
         return connection;
     }
@@ -35,16 +33,6 @@ public class Connexion {
             }
         } catch (SQLException e) {
             System.err.println("Erreur fermeture connexion :" + e.getMessage());
-        }
-    }
-
-    
-    public static void executeQuery(String query) {
-        try (Connection c = getConnexion(); Statement stmt = c.createStatement()) {
-            stmt.executeUpdate(query);
-            System.out.println("Requête exécutée :" + query);
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de l'exécution :" + e.getMessage());
         }
     }
 }

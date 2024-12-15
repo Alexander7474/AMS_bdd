@@ -19,7 +19,7 @@ CREATE TABLE utilisateur (
 );
 
 CREATE TABLE fournisseur (
-  siret CHAR(14) PRIMARY KEY,
+  siret VARCHAR(14) PRIMARY KEY,
   nom VARCHAR(100) NOT NULL,
   adresse VARCHAR(100) NOT NULL,
   numero_tel VARCHAR(20), -- Augmenté à 20 pour plus de flexibilité
@@ -35,7 +35,7 @@ CREATE TABLE contact (
 );
 
 CREATE TABLE contact_fournisseur (
-  siret CHAR(14),
+  siret VARCHAR(14),
   id_contact INT,
   PRIMARY KEY (siret, id_contact),
   FOREIGN KEY (siret) REFERENCES fournisseur(siret),
@@ -43,7 +43,7 @@ CREATE TABLE contact_fournisseur (
 );
 
 CREATE TABLE produit (
-  id_produit BIGSERIAL PRIMARY KEY,
+  id_produit INT PRIMARY KEY,
   nom VARCHAR(55) NOT NULL,
   description VARCHAR(500), -- Correction du nom de la colonne
   categorie VARCHAR(100)
@@ -51,7 +51,7 @@ CREATE TABLE produit (
 
 CREATE TABLE produit_fournisseur (
   id_produit INT,
-  siret CHAR(14),
+  siret VARCHAR(14),
   prix_vente_uni DOUBLE PRECISION NOT NULL,
   PRIMARY KEY (siret, id_produit),
   FOREIGN KEY (siret) REFERENCES fournisseur(siret),
@@ -69,7 +69,7 @@ CREATE TABLE vente (
 
 CREATE TABLE contrat (
   id_contrat SERIAL PRIMARY KEY,
-  siret CHAR(14),
+  siret VARCHAR(14),
   id_produit INT,
   prix_uni DOUBLE PRECISION NOT NULL,
   date_debut DATE NOT NULL,
