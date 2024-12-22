@@ -1,5 +1,6 @@
 package swing_gui;
 
+import data.Connexion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,6 +33,7 @@ public class UserManager {
 	
 	// ===================================================================================================
 	
+	// on ne récupère pas son role mais son groupe 
 	public static String getUserRole(String username) {
 		String query = "SELECT nom FROM user_group g " + "JOIN utilisateur u ON g.id_group = u.id_group " + "WHERE u.username = ?";
 		try (Connection conn = Connexion.getConnexion();
