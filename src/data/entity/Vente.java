@@ -2,9 +2,11 @@ package data.entity;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.Gestion;
 import data.IData;
 import data.fieldType;
 
@@ -71,20 +73,27 @@ public class Vente implements IData {
 	/**
 	 * @brief constructeur à utiliser lors de la récupération des ventes dans la base
 	 * 
-	 * @param idVente
-	 * @param idProduit
-	 * @param date
-	 * @param prixVenteUni
-	 * @param quantite
+	 * @param rs ResultSet contenant de objet de la tablea vente
 	 */
-	public Vente(int idVente, int idProduit, Date date, double prixVenteUni, double quantite) {
+	public Vente(ResultSet rs) {
 		super();
-		this.idVente = idVente;
-		this.idProduit = idProduit;
-		this.date = date;
-		this.prixVenteUni = prixVenteUni;
-		this.quantite = quantite;
+		
 		createStruct();
+		
+		try {
+			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
+				this.idVente = rs.getInt("id_vente");
+				this.idProduit = rs.getInt("id_produit");
+				this.date = rs.getDate("date");
+				this.prixVenteUni = rs.getDouble("prix_vente_uni");
+				this.quantite = rs.getDouble("quantite");
+			}else {
+				System.err.println("Erreur: pas le bonne objet/table pour la récupération de vente");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

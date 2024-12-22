@@ -11,7 +11,6 @@ import data.entity.Vente;
 
 public class Test {
 	public static void main(String[] args) {
-		Gestion gestion = new Gestion();
 		
 		// pour tester toutes les entités de la base
 		Fournisseur fournisseur = new Fournisseur("14523652895412", "the market", "64 avenue de l'avenue", "0505050505", "themarket@market.fr");
@@ -20,25 +19,21 @@ public class Test {
 		Contact contact = new Contact("jhon", "doe", "0606060606", "jhon.doe@gmail.com");
 		Vente vente = new Vente(1, "2024-12-12", 5.23, 1.2);
 		try {
-			//gestion.insert(produit, "produit");
-			//gestion.insert(fournisseur, "fournisseur");
-			//gestion.insert(contrat, "contrat");
-			//gestion.insert(vente, "vente");
-			//gestion.insert(contact, "contact");
-			gestion.displayTable("produit");
+			Gestion.displayTable("produit");
 			System.out.println();
-			gestion.displayTable("fournisseur");
+			Gestion.displayTable("fournisseur");
 			System.out.println();
-			gestion.displayTable("contact");
+			Gestion.displayTable("contact");
 			System.out.println();
-			gestion.displayTable("contrat");
+			Gestion.displayTable("contrat");
 			System.out.println();
-			gestion.displayTable("vente");
+			Gestion.displayTable("vente");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		
 		
 	}

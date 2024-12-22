@@ -24,7 +24,7 @@ public class Gestion {
 	 * @return map
 	 * @throws SQLException
 	 */
-	public HashMap<String, fieldType> structTable(String table, boolean display) throws SQLException {
+	public static HashMap<String, fieldType> structTable(String table, boolean display) throws SQLException {
 		//requete pour recup les info structurelle d'une table
 		String request = "SELECT * FROM " + table + " LIMIT 0";
 		
@@ -77,7 +77,7 @@ public class Gestion {
 	 * @param table
 	 * @throws SQLException
 	 */
-	public void displayTable(String table) throws SQLException {
+	public static void displayTable(String table) throws SQLException {
 		//requete pour recup les info structurelle d'une table
 		String request = "SELECT * FROM "+table;
 		
@@ -129,7 +129,7 @@ public class Gestion {
 	 * @param query
 	 * @throws SQLException
 	 */
-	public void execute(String query) throws SQLException {
+	public static void execute(String query) throws SQLException {
 		
 		if(query.contains("INSERT")) {
 			System.err.println("Erreur requếte insert dans execute: illegal");
@@ -155,12 +155,12 @@ public class Gestion {
 	 * @param data
 	 * @param table
 	 */
-	public void insert(IData data, String table){
+	public static void insert(IData data, String table){
 		
 		//on récupère la map de filedType de la table
 		HashMap<String, fieldType> tableMap = null;
 		try {
-			tableMap = this.structTable(table, false);
+			tableMap = structTable(table, false);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -186,4 +186,6 @@ public class Gestion {
 			}
 		}
 	}
+	
+	
 }
