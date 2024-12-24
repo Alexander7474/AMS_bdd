@@ -1,17 +1,19 @@
-package data.dependance_multi;
+package data.entity;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.Gestion;
 import data.IData;
 import data.fieldType;
-import data.entity.Fournisseur;
-import data.entity.Produit;
 
-public class ProduitFournisseur implements IData{
+public class Commande implements IData{
+	private int idCommande;
 	private int idProduit;
 	private String siret;
+	private double quantite;
 	
 	private String values;
 	private HashMap<String, fieldType> map;
@@ -20,10 +22,12 @@ public class ProduitFournisseur implements IData{
 	public void createStruct() {
 		map = new HashMap<String, fieldType>();
 	
+		map.put("id_commande", fieldType.BIGSERIAL);
 		map.put("id_produit", fieldType.INT4);
 		map.put("siret", fieldType.VARCHAR);
+		map.put("quantite", fieldType.FLOAT8);
 		
-		values = "(id_produit, siret) VALUES (?, ?)"; 
+		values = "(id_produit, siret, quantite) VALUES (?, ?, ?)"; 
 	}
 
 	@Override
@@ -49,22 +53,43 @@ public class ProduitFournisseur implements IData{
 		try {
 			statement.setInt(1, idProduit);
 			statement.setString(2, siret);
+			statement.setDouble(3, quantite);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @brief constructeur à utiliser lors de la récupération des commandes dans la base
+	 * 
+	 * @param rs ResultSet contenant de objet de la table commande
+	 */
+	public Commande(ResultSet rs) {
+		super();
+		
+		createStruct();
+		
+		try {
+			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
+				this.idCommande = rs.getInt("id_commande");
+				this.idProduit = rs.getInt("id_produit");
+				this.siret = rs.getString("siret");
+				this.quantite = rs.getDouble("quantite");
+			}else {
+				System.err.println("Erreur: pas le bonne objet/table pour la récupération de commande");
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public ProduitFournisseur(int idProduit, String siret) {
+	public Commande(int idProduit, String siret, double quantite) {
 		super();
 		this.idProduit = idProduit;
 		this.siret = siret;
-	}
-	
-	public ProduitFournisseur(Produit p, Fournisseur f) {
-		super();
-		this.idProduit = p.getIdProduit();
-		this.siret = f.getSiret();
+		this.quantite = quantite;
 	}
 
 	public int getIdProduit() {
@@ -83,4 +108,16 @@ public class ProduitFournisseur implements IData{
 		this.siret = siret;
 	}
 
+	public double getQuantite() {
+		return quantite;
+	}
+
+	public void setQuantite(double quantite) {
+		this.quantite = quantite;
+	}
+
+	public int getIdCommande() {
+		return idCommande;
+	}
+	
 }

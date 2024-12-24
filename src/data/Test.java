@@ -1,5 +1,7 @@
 package data;
 
+import java.sql.Statement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
@@ -34,7 +36,18 @@ public class Test {
 			e.printStackTrace();
 		}
 		
-		
+		String testQuery = "SELECT * FROM vente";
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			ResultSet rs = statement.executeQuery(testQuery);
+			while(rs.next()) {
+				Vente v = new Vente(rs);
+				System.out.println(v.getIdProduit());
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }

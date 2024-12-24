@@ -19,7 +19,7 @@ CREATE TABLE utilisateur (
 );
 
 CREATE TABLE fournisseur (
-  siret VARCHAR(14) PRIMARY KEY,
+  siret VARCHAR(14) PRIMARY KEY, -- passage de CHAR(14) à VARCHAR(14)
   nom VARCHAR(100) NOT NULL,
   adresse VARCHAR(100) NOT NULL,
   numero_tel VARCHAR(20), -- Augmenté à 20 pour plus de flexibilité
@@ -89,8 +89,9 @@ CREATE TABLE lot_produit (
 
 CREATE TABLE commande (
   id_commande BIGSERIAL PRIMARY KEY,
-  id_lot_produit INT,
-  siret CHAR(14),
+  id_produit INT,
+  siret VARCHAR(14),
+  quantite DOUBLE PRECISION NOT NULL, -- oublie de la quantité sur la précédente version
   FOREIGN KEY (siret) REFERENCES fournisseur(siret),
   FOREIGN KEY (id_lot_produit) REFERENCES lot_produit(id_lot_produit)
 );

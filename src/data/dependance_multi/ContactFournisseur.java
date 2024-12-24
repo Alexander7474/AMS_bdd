@@ -25,11 +25,6 @@ public class ContactFournisseur implements IData {
 		
 		values = "(id_contact, siret) VALUES (?, ?)"; 
 	}
-	
-	@Override
-	public HashMap<String, fieldType> getStruct() {
-		return map;
-	}
 
 	@Override
 	public String getValues() {

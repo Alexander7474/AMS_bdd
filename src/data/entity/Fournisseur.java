@@ -1,9 +1,11 @@
 package data.entity;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.Gestion;
 import data.IData;
 import data.fieldType;
 
@@ -29,12 +31,6 @@ public class Fournisseur implements IData{
 		
 		values = "(siret, nom, adresse, numero_tel, email) VALUES (?, ?, ?, ?, ?)"; 
 	}
-	
-	@Override
-	public HashMap<String, fieldType> getStruct() {
-		return map;
-	}
-
 
 	@Override
 	public String getValues() {
@@ -76,6 +72,32 @@ public class Fournisseur implements IData{
 		this.numeroTel = numero_tel;
 		this.email = email;
 		createStruct();
+	}
+	
+	/**
+	 * @brief constructeur à utiliser lors de la récupération des fournisseurs dans la base
+	 * 
+	 * @param rs ResultSet contenant de objet de la tablea forunisseur
+	 */
+	public Fournisseur(ResultSet rs) {
+		super();
+		
+		createStruct();
+		
+		try {
+			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
+				this.siret = rs.getString("siret");
+				this.nom = rs.getString("nom");
+				this.adresse = rs.getString("date_vente");
+				this.numeroTel = rs.getString("numero_tel");
+				this.email = rs.getString("email");
+			}else {
+				System.err.println("Erreur: pas le bonne objet/table pour la récupération de fournisseur");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getSiret() {

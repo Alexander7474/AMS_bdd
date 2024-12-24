@@ -1,9 +1,11 @@
 package data.entity;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.Gestion;
 import data.IData;
 import data.fieldType;
 
@@ -28,11 +30,6 @@ public class Contact implements IData{
 		map.put("email", fieldType.VARCHAR);
 		
 		values = "(nom, prenom, numero_tel, email) VALUES (?, ?, ?, ?)"; 
-	}
-	
-	@Override
-	public HashMap<String, fieldType> getStruct() {
-		return map;
 	}
 
 	@Override
@@ -73,6 +70,32 @@ public class Contact implements IData{
 		this.numeroTel = numeroTel;
 		this.email = email;
 		createStruct();
+	}
+	
+	/**
+	 * @brief constructeur à utiliser lors de la récupération des contacts dans la base
+	 * 
+	 * @param rs ResultSet contenant de objet de la table contact
+	 */
+	public Contact(ResultSet rs) {
+		super();
+		
+		createStruct();
+		
+		try {
+			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
+				this.idContact = rs.getInt("id_contact");
+				this.nom = rs.getString("nom");
+				this.prenom = rs.getString("prenom");
+				this.numeroTel = rs.getString("numero_tel");
+				this.email = rs.getString("email");
+			}else {
+				System.err.println("Erreur: pas le bonne objet/table pour la récupération de contact");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getNom() {

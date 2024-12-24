@@ -9,8 +9,6 @@ public interface IData {
 	//REMPLIE DANS LA CLASSE UNE HashMap<String, fieldType> LE NOM DES CHAMPS ET LE TYPE DE VARIABLE ET CREE LA CHAINE values ...
 	public void createStruct();
 	
-	public HashMap<String, fieldType> getStruct();
-	
 	//RETOURNE UNE CHAINE DE CARACTERE PRE-REMPLIE PERMETTANT DE COMPOSER LA REQUETE INSERT ...
 	public String getValues();
 	

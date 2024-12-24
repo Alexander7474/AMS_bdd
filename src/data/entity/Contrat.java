@@ -2,9 +2,11 @@ package data.entity;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.Gestion;
 import data.IData;
 import data.fieldType;
 
@@ -32,12 +34,6 @@ public class Contrat implements IData{
 		
 		values = "(siret, id_produit, prix_uni, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)"; 
 	}
-	
-	@Override
-	public HashMap<String, fieldType> getStruct() {
-		return map;
-	}
-
 
 	@Override
 	public String getValues() {
@@ -72,24 +68,30 @@ public class Contrat implements IData{
 	}
 
 	/**
-	 * @brief A utiliser pour récupérer un contrat depuis la base
+	 * @brief constructeur à utiliser lors de la récupération des contrats dans la base
 	 * 
-	 * @param idContrat
-	 * @param siret
-	 * @param idProduit
-	 * @param prixUni
-	 * @param dateDebut
-	 * @param dateFin
+	 * @param rs ResultSet contenant de objet de la table contrat
 	 */
-	public Contrat(int idContrat, String siret, int idProduit, double prixUni, Date dateDebut, Date dateFin) {
+	public Contrat(ResultSet rs) {
 		super();
-		this.idContrat = idContrat;
-		this.siret = siret;
-		this.idProduit = idProduit;
-		this.prixUni = prixUni;
-		this.dateDebut = dateDebut;
-		this.dateFin = dateFin;
+		
 		createStruct();
+		
+		try {
+			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
+				this.idContrat = rs.getInt("id_contrat");
+				this.siret = rs.getString("siret");
+				this.idProduit = rs.getInt("id_produit");
+				this.prixUni = rs.getDouble("prix_uni");
+				this.dateDebut = rs.getDate("date_debut");
+				this.dateFin = rs.getDate("date_fin");
+			}else {
+				System.err.println("Erreur: pas le bonne objet/table pour la récupération de contrat");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**

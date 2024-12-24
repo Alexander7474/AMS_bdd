@@ -1,9 +1,11 @@
 package data.entity;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.Gestion;
 import data.IData;
 import data.fieldType;
 
@@ -23,6 +25,31 @@ public class Produit implements IData{
 		this.desc = desc;
 		this.cate = categorie;
 		createStruct();
+	}
+	
+	/**
+	 * @brief constructeur à utiliser lors de la récupération des produits dans la base
+	 * 
+	 * @param rs ResultSet contenant de objet de la table produit
+	 */
+	public Produit(ResultSet rs) {
+		super();
+		
+		createStruct();
+		
+		try {
+			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
+				this.idProduit = rs.getInt("id_produit");
+				this.nom = rs.getString("nom");
+				this.desc = rs.getString("description");
+				this.cate = rs.getString("categorie");
+			}else {
+				System.err.println("Erreur: pas le bonne objet/table pour la récupération de produit");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public int getIdProduit() {
@@ -68,12 +95,6 @@ public class Produit implements IData{
 		
 		values = "(id_produit, nom, description, categorie) VALUES (?, ?, ?, ?)"; 
 	}
-	
-	@Override
-	public HashMap<String, fieldType> getStruct() {
-		return map;
-	}
-
 
 	@Override
 	public String getValues() {
