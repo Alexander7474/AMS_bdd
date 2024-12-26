@@ -164,6 +164,7 @@ public class ManagementSoftware {
 			Vector<Fournisseur> data = new Vector<>(); // Données sur les fournisseurs
 			// Et moi je vien rajouter la partie requête qui va chercher les infos de la base
 			// en attendant créer quelque fausse interface IData pour tester ton code
+			// LA VÉRACITÉ DE CE TU AFFICHE N'IMPORTE PAS, LE PLUS IMPORTANT C'EST QUE TON CODE PUISSE AFFICHER DES INTERFACES IDATA 
 			
 			// !!! c'est moi qui dois faire cette portion de code !!!
 			try {
@@ -183,7 +184,7 @@ public class ManagementSoftware {
 						"Erreur lors du chargement des fournisseurs : " + eData.getMessage());
 			}
 			// !!! !!!
-			
+			// tu fera pareille pour le menu des stats, tu affichera de fausse stats et moi je rajouterais le code pour récup les bonnes infos dans la base
 
 			// je ne sais pas comment swing fonctionne donc il faut que tu t'arrange pour afficher des interfaces IData
 			JTable suppliersTable = new JTable(data, columnNames); // !> marche pas
