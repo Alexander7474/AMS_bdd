@@ -18,6 +18,7 @@ public class LotProduit implements IData{
 	private Date peremption;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	@Override
@@ -31,12 +32,19 @@ public class LotProduit implements IData{
 		map.put("peremption", fieldType.DATE);
 		
 		values = "(id_produit, prix_vente_uni, quantite, peremption) VALUES (?, ?, ?, ?)"; 
+		values = "(id_lot_produit, id_produit, prix_vente_uni, quantite, peremption) = (?, ?, ?, ?, ?)";
 	}
 
 	@Override
 	public String getValues() {
 		// TODO Auto-generated method stub
 		return values;
+	}
+	
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
 	}
 
 	@Override
@@ -58,6 +66,20 @@ public class LotProduit implements IData{
 			statement.setDouble(2, prixVenteUni);
 			statement.setDouble(3, quantite);
 			statement.setDate(4, peremption);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idLotProduit);
+			statement.setInt(2, idProduit);
+			statement.setDouble(3, prixVenteUni);
+			statement.setDouble(4, quantite);
+			statement.setDate(5, peremption);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,6 +118,7 @@ public class LotProduit implements IData{
 		this.prixVenteUni = prixVenteUni;
 		this.quantite = quantite;
 		this.peremption = peremption;
+		createStruct();
 	}
 
 	public int getIdProduit() {

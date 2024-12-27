@@ -1,9 +1,11 @@
 package data.dependance_multi;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import data.Gestion;
 import data.IData;
 import data.fieldType;
 import data.entity.Contact;
@@ -14,6 +16,7 @@ public class ContactFournisseur implements IData {
 	private String siret;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	@Override
@@ -24,6 +27,7 @@ public class ContactFournisseur implements IData {
 		map.put("siret", fieldType.VARCHAR);
 		
 		values = "(id_contact, siret) VALUES (?, ?)"; 
+		valuesEq = "(id_contact, siret) = (?, ?)"; 
 	}
 
 	@Override
@@ -32,6 +36,12 @@ public class ContactFournisseur implements IData {
 		return values;
 	}
 
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
+	}
+	
 	@Override
 	public HashMap<String, fieldType> getMap() {
 		// TODO Auto-generated method stub
@@ -54,17 +64,53 @@ public class ContactFournisseur implements IData {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idContact);
+			statement.setString(2, siret);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public ContactFournisseur(int idContact, String siret) {
 		super();
 		this.idContact = idContact;
 		this.siret = siret;
+		createStruct();
 	}
 	
 	public ContactFournisseur(Contact c, Fournisseur f) {
 		super();
 		this.idContact = c.getIdContact();
 		this.siret = f.getSiret();
+		createStruct();
+	}
+	
+	/**
+	 * @brief constructeur à utiliser lors de la récupération des liaison contact-forunisseur dans la base
+	 * 
+	 * @param rs ResultSet contenant de objet de la table
+	 */
+	public ContactFournisseur(ResultSet rs) {
+		super();
+		
+		createStruct();
+		
+		try {
+			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
+				this.idContact = rs.getInt("id_contact");
+				this.siret = rs.getString("siret");
+			}else {
+				System.err.println("Erreur: pas le bonne objet/table pour la récupération de liaison contact fourniseur");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public int getIdContact() {

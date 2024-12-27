@@ -17,6 +17,7 @@ public class Fournisseur implements IData{
 	private String email;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	@Override
@@ -30,12 +31,19 @@ public class Fournisseur implements IData{
 		map.put("email", fieldType.VARCHAR);
 		
 		values = "(siret, nom, adresse, numero_tel, email) VALUES (?, ?, ?, ?, ?)"; 
+		valuesEq = "(siret, nom, adresse, numero_tel, email) = (?, ?, ?, ?, ?)"; 
 	}
 
 	@Override
 	public String getValues() {
 		// TODO Auto-generated method stub
 		return values;
+	}
+	
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
 	}
 
 	@Override
@@ -52,6 +60,20 @@ public class Fournisseur implements IData{
 	
 	@Override
 	public void composeStatement(PreparedStatement statement) {
+		try {
+			statement.setString(1, siret);
+			statement.setString(2, nom);
+			statement.setString(3, adresse);
+			statement.setString(4, numeroTel);
+			statement.setString(5, email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
 		try {
 			statement.setString(1, siret);
 			statement.setString(2, nom);

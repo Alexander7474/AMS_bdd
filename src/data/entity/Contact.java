@@ -17,6 +17,7 @@ public class Contact implements IData{
 	private String email;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	@Override
@@ -30,12 +31,19 @@ public class Contact implements IData{
 		map.put("email", fieldType.VARCHAR);
 		
 		values = "(nom, prenom, numero_tel, email) VALUES (?, ?, ?, ?)"; 
+		valuesEq = "(idContact, nom, prenom, numero_tel, email) = (?, ?, ?, ?, ?)"; 
 	}
 
 	@Override
 	public String getValues() {
 		// TODO Auto-generated method stub
 		return values;
+	}
+	
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
 	}
 
 	@Override
@@ -57,6 +65,20 @@ public class Contact implements IData{
 			statement.setString(2, prenom);
 			statement.setString(3, numeroTel);
 			statement.setString(4, email);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idContact);
+			statement.setString(2, nom);
+			statement.setString(3, prenom);
+			statement.setString(4, numeroTel);
+			statement.setString(5, email);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

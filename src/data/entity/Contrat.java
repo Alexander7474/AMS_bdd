@@ -19,6 +19,7 @@ public class Contrat implements IData{
 	private Date dateFin;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	@Override
@@ -33,12 +34,20 @@ public class Contrat implements IData{
 		map.put("date_fin", fieldType.DATE);
 		
 		values = "(siret, id_produit, prix_uni, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)"; 
+
+		valuesEq = "(id_contrat, siret, id_produit, prix_uni, date_debut, date_fin) VALUES (?, ?, ?, ?, ?, ?)"; 
 	}
 
 	@Override
 	public String getValues() {
 		// TODO Auto-generated method stub
 		return values;
+	}
+	
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
 	}
 
 	@Override
@@ -61,6 +70,21 @@ public class Contrat implements IData{
 			statement.setDouble(3, prixUni);
 			statement.setDate(4, dateDebut);
 			statement.setDate(5, dateFin);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idContrat);
+			statement.setString(2, siret);
+			statement.setInt(3, idProduit);
+			statement.setDouble(4, prixUni);
+			statement.setDate(5, dateDebut);
+			statement.setDate(6, dateFin);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

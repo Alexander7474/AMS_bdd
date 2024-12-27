@@ -16,6 +16,7 @@ public class Produit implements IData{
 	private String cate;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	public Produit(int idProduit, String nom, String desc, String categorie) {
@@ -94,12 +95,19 @@ public class Produit implements IData{
 		map.put("categorie", fieldType.VARCHAR);
 		
 		values = "(id_produit, nom, description, categorie) VALUES (?, ?, ?, ?)"; 
+		valuesEq = "(id_produit, nom, description, categorie) = (?, ?, ?, ?)"; 
 	}
 
 	@Override
 	public String getValues() {
 		// TODO Auto-generated method stub
 		return values;
+	}
+	
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
 	}
 
 	@Override
@@ -116,6 +124,19 @@ public class Produit implements IData{
 	
 	@Override
 	public void composeStatement(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idProduit);
+			statement.setString(2, nom);
+			statement.setString(3, desc);
+			statement.setString(4, cate);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
 		try {
 			statement.setInt(1, idProduit);
 			statement.setString(2, nom);

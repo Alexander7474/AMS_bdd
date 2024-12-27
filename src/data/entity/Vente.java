@@ -18,6 +18,7 @@ public class Vente implements IData {
 	private double quantite;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	@Override
@@ -31,12 +32,19 @@ public class Vente implements IData {
 		map.put("quantite", fieldType.FLOAT8);
 		
 		values = "(id_produit, date_vente, prix_vente_uni, quantite) VALUES (?, ?, ?, ?)"; 
+		valuesEq = "(id_vente, id_produit, date_vente, prix_vente_uni, quantite) = (?, ?, ?, ?, ?)"; 
 	}
 
 	@Override
 	public String getValues() {
 		// TODO Auto-generated method stub
 		return values;
+	}
+	
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
 	}
 
 	@Override
@@ -58,6 +66,20 @@ public class Vente implements IData {
 			statement.setDate(2, date);
 			statement.setDouble(3, prixVenteUni);
 			statement.setDouble(4, quantite);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idVente);
+			statement.setInt(2, idProduit);
+			statement.setDate(3, date);
+			statement.setDouble(4, prixVenteUni);
+			statement.setDouble(5, quantite);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

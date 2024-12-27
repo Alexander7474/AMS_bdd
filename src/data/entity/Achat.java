@@ -17,6 +17,7 @@ public class Achat implements IData{
 	private Date dateAchat;
 	
 	private String values;
+	private String valuesEq;
 	private HashMap<String, fieldType> map;
 	
 	@Override
@@ -29,12 +30,19 @@ public class Achat implements IData{
 		map.put("date_achat", fieldType.DATE);
 		
 		values = "(id_commande, prix_achat_uni, date_achat) VALUES (?, ?, ?)"; 
+		valuesEq = "(id_achat, id_commande, prix_achat_uni, date_achat) = (?, ?, ?, ?)"; 
 	}
 
 	@Override
 	public String getValues() {
 		// TODO Auto-generated method stub
 		return values;
+	}
+	
+	@Override
+	public String getValuesEq() {
+		// TODO Auto-generated method stub
+		return valuesEq;
 	}
 
 	@Override
@@ -55,6 +63,19 @@ public class Achat implements IData{
 			statement.setInt(1, idCommande);
 			statement.setDouble(2, prixAchatUni);
 			statement.setDate(3, dateAchat);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void composeStatementEq(PreparedStatement statement) {
+		try {
+			statement.setInt(1, idAchat);
+			statement.setInt(2, idCommande);
+			statement.setDouble(3, prixAchatUni);
+			statement.setDate(4, dateAchat);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,6 +112,8 @@ public class Achat implements IData{
 		this.idCommande = idCommande;
 		this.prixAchatUni = prixAchatUni;
 		this.dateAchat = dateAchat;
+		
+		createStruct();
 	}
 
 	public int getIdCommande() {
