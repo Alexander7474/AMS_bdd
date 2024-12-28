@@ -115,3 +115,7 @@ INSERT INTO commande(id_produit,siret,quantite) VALUES (1,'11111111111111',5);
 INSERT INTO achat(id_commande,prix_achat_uni,date_achat) VALUES (1,2.5,'20-12-2022');
 INSERT INTO lot_produit(id_produit, prix_vente_uni, quantite, peremption, id_achat) VALUES (1,3.5,5,'20-12-2025',1);
 INSERT INTO vente(id_lot_produit, date_vente, prix_vente_uni, quantite) VALUES(1,'25-12-2023',3.5,2);
+ 
+ 
+ 
+ 
