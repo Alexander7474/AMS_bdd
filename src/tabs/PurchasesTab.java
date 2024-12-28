@@ -6,6 +6,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +23,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import data.Connexion;
 import data.Gestion;
 import data.IData;
 import data.entity.Achat;
 import data.entity.Commande;
+import data.entity.Fournisseur;
 
 public class PurchasesTab {
 
@@ -54,9 +59,19 @@ public class PurchasesTab {
 
 		List<IData> commandList = new ArrayList<>();
 
-		// Simulation de quelques commandes
-		commandList.add(new Commande(1, "123456789", 10.0)); // < SQL
-		commandList.add(new Commande(2, "987654321", 5.0)); // < SQL
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM commande")){
+				while(rs.next()) {
+					Commande c = new Commande(rs);
+					commandList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// ==============================================================
 

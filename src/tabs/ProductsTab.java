@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +22,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import data.Connexion;
 import data.Gestion;
 import data.IData;
+import data.entity.Fournisseur;
 import data.entity.Produit;
 
 public class ProductsTab {
@@ -38,6 +43,8 @@ public class ProductsTab {
 
 		// Création du titre de l'onglet
 
+		
+
 		JLabel titleLabelProducts = new JLabel("Onglet des produits", SwingConstants.CENTER);
 		titleLabelProducts.setFont(new Font("Arial", Font.BOLD, 20));
 		GridBagConstraints cstProducts = new GridBagConstraints();
@@ -50,14 +57,22 @@ public class ProductsTab {
 
 		// Création de la List dans laquelle seront stockés les produits
 
-		List<IData> productsList = new ArrayList<>();
-
-		// Tester manuellement les fonctionnalités des produits
-		productsList.add(new Produit(1, "Produit A", "Description", "Catégorie 1")); // >!SQL
-		productsList.add(new Produit(2, "Produit B", "Description 2", "Catégorie 2")); // >!SQL
-
-		// ==============================================================
-
+        List<IData> productsList = new ArrayList<>();
+        
+    	// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM produit")){
+				while(rs.next()) {
+					Produit p = new Produit(rs);
+					productsList.add(p);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// Affichage d'un tableau des produits
 
 		String[] columnNamesProducts = { "ID Produit", "Nom", "Description", "Catégorie" }; // Nom des colonnes

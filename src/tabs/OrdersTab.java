@@ -6,6 +6,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +23,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import data.Connexion;
 import data.Gestion;
 import data.IData;
 import data.entity.Achat;
 import data.entity.Commande;
+import data.entity.LotProduit;
+import data.entity.Produit;
 
 public class OrdersTab {
 
@@ -51,8 +57,20 @@ public class OrdersTab {
 
 		// Création de la List dans laquelle seront stockées les commandes
 
-		List<IData> ordersList = new ArrayList<>();
-		ordersList.add(new Commande(10, "14523652895412", 5.0));// >!SQL
+		List<IData> ordersList = new ArrayList<>(); 
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM commande")){
+				while(rs.next()) {
+					Commande c = new Commande(rs);
+					ordersList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// ==============================================================
 
@@ -143,17 +161,28 @@ public class OrdersTab {
 				Commande selectedCommande = (Commande) ordersList.get(selectedRow);
 
 				// Test de création d'un objet achat manuellement
-				Achat achat = new Achat(selectedCommande.getIdProduit(), 20.0, new Date(System.currentTimeMillis()) // Date
-																													// actuelle
-				);
-
+				Achat achat = new Achat(selectedCommande.getIdProduit(), 20.0, new Date(System.currentTimeMillis()));
+				
 				Gestion.insert(achat, "achat"); // Ajout de la commande transformée en achat dans la table achat
+				
+				//commande acheté donc nouveau lot de produit 
+				LotProduit lp = new LotProduit(selectedCommande.getIdProduit(), 
+						20.0, 
+						selectedCommande.getQuantite(), 
+						new Date(System.currentTimeMillis()+99999999), 
+						0);
+				
+				//on recup l'id de l'achat passé pour le mettre dans le lot de produit 
+
+				
+				Gestion.insert(lp, "lot_produit"); // Ajout du lot de produit dans les stocks
 
 				// Supprimer de la List
-				ordersList.remove(selectedCommande);
-				tableModelOrders.removeRow(selectedRow);
 
-				Gestion.delete(selectedCommande, "commande"); // Supprimer la commande de la table commande
+				//ordersList.remove(selectedCommande);
+				//tableModelOrders.removeRow(selectedRow);
+				
+				//Gestion.delete(selectedCommande, "commande"); // Supprimer la commande de la table commande
 
 				JOptionPane.showMessageDialog(frame, "Commande validée et transformée en achat !");
 			} catch (Exception ex) {

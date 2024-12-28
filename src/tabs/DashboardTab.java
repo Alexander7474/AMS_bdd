@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +20,9 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import data.Connexion;
 import data.IData;
+import data.entity.Fournisseur;
 import data.entity.LotProduit;
 
 public class DashboardTab {
@@ -45,19 +50,27 @@ public class DashboardTab {
 
 		// ==============================================================
 
-		// Liste des lots de produits pour simulation
-
 		List<IData> lotProduitList = new ArrayList<>();
 
-		// Test de simulation
-		lotProduitList.add(new LotProduit(1, 10.5, 50, Date.valueOf("2023-12-30"), 5)); // >SQL
-		lotProduitList.add(new LotProduit(2, 15.0, 100, Date.valueOf("2024-01-10"), 10)); // >SQL
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM lot_produit")){
+				while(rs.next()) {
+					LotProduit lp = new LotProduit(rs);
+					lotProduitList.add(lp);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// ==============================================================
 
 		// Tableau des lots de produits approchant leur date de péremption
 
-		String[] columnNamesExpiry = { "ID Lot", "ID Produit", "Quantité", "Prix Unitaire", "Date de péremption" };
+		String[] columnNamesExpiry = { "ID Lot", "ID Produit", "Quantité", "Prix Unitaire", "Date de péremption", "ID achat" };
 		DefaultTableModel expiryTableModel = new DefaultTableModel(columnNamesExpiry, 0);
 
 		for (IData item : lotProduitList) {
@@ -68,7 +81,7 @@ public class DashboardTab {
 
 				// Ajouter les produits qui correspondent qui ont bien leur date de péremption qui approche
 				expiryTableModel.addRow(new Object[] { lotProduit.getIdLotProduit(), lotProduit.getIdProduit(),
-						lotProduit.getQuantite(), lotProduit.getPrixVenteUni(), lotProduit.getPeremption() });
+						lotProduit.getQuantite(), lotProduit.getPrixVenteUni(), lotProduit.getPeremption(), lotProduit.getIdAchat() });
 			}
 		}
 

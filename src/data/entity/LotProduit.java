@@ -26,7 +26,7 @@ public class LotProduit implements IData{
 	public void createStruct() {
 		map = new HashMap<String, fieldType>();
 	
-		map.put("id_lot_produit", fieldType.SERIAL);
+		map.put("id_lot_produit", fieldType.BIGSERIAL);
 		map.put("id_produit", fieldType.INT4);
 		map.put("prix_vente_uni", fieldType.FLOAT8);
 		map.put("quantite", fieldType.FLOAT8);
