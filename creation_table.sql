@@ -60,11 +60,11 @@ CREATE TABLE produit_fournisseur (
 
 CREATE TABLE vente (
   id_vente BIGSERIAL PRIMARY KEY,
-  id_produit INT, -- Correction du nom de la colonne
+  id_lot_produit INT, -- Lot de produit d'ou vien le produit vendu
   date_vente DATE,
   prix_vente_uni DOUBLE PRECISION NOT NULL,
   quantite DOUBLE PRECISION NOT NULL,
-  FOREIGN KEY (id_produit) REFERENCES produit(id_produit)
+  FOREIGN KEY (id_lot_produit) REFERENCES lot_produit(id_lot_produit)
 );
 
 CREATE TABLE contrat (
@@ -78,13 +78,15 @@ CREATE TABLE contrat (
   FOREIGN KEY (id_produit) REFERENCES produit(id_produit)
 );
 
-CREATE TABLE lot_produit (
+CREATE TABLE lot_produit ( -- les lots de produits son dans le stock du magasin
   id_lot_produit BIGSERIAL PRIMARY KEY,
   id_produit INT,
   prix_vente_uni DOUBLE PRECISION NOT NULL,
   quantite DOUBLE PRECISION NOT NULL,
   peremption DATE,
-  FOREIGN KEY (id_produit) REFERENCES produit(id_produit)
+  id_achat INT, -- De quelle achat provient le lot de produit
+  FOREIGN KEY (id_produit) REFERENCES produit(id_produit),
+  FOREIGN KEY (id_achat) REFERENCES achat(id_achat)
 );
 
 CREATE TABLE commande (

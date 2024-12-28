@@ -16,6 +16,7 @@ public class LotProduit implements IData{
 	private double prixVenteUni;
 	private double quantite;
 	private Date peremption;
+	private int idAchat;
 	
 	private String values;
 	private String valuesEq;
@@ -30,9 +31,10 @@ public class LotProduit implements IData{
 		map.put("prix_vente_uni", fieldType.FLOAT8);
 		map.put("quantite", fieldType.FLOAT8);
 		map.put("peremption", fieldType.DATE);
+		map.put("id_achat", fieldType.INT4);
 		
-		values = "(id_produit, prix_vente_uni, quantite, peremption) VALUES (?, ?, ?, ?)"; 
-		values = "(id_lot_produit, id_produit, prix_vente_uni, quantite, peremption) = (?, ?, ?, ?, ?)";
+		values = "(id_produit, prix_vente_uni, quantite, peremption, id_achat) VALUES (?, ?, ?, ?, ?)"; 
+		values = "(id_lot_produit, id_produit, prix_vente_uni, quantite, peremption, id_achat) = (?, ?, ?, ?, ?, ?)";
 	}
 
 	@Override
@@ -66,6 +68,7 @@ public class LotProduit implements IData{
 			statement.setDouble(2, prixVenteUni);
 			statement.setDouble(3, quantite);
 			statement.setDate(4, peremption);
+			statement.setInt(5, idAchat);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -80,6 +83,7 @@ public class LotProduit implements IData{
 			statement.setDouble(3, prixVenteUni);
 			statement.setDouble(4, quantite);
 			statement.setDate(5, peremption);
+			statement.setInt(6, idAchat);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -103,6 +107,7 @@ public class LotProduit implements IData{
 				this.prixVenteUni = rs.getDouble("prix_vente_uni");
 				this.quantite = rs.getDouble("quantite");
 				this.peremption = rs.getDate("peremption");
+				this.idAchat = rs.getInt("id_achat");
 			}else {
 				System.err.println("Erreur: pas le bonne objet/table pour la récupération de produit");
 			}
@@ -112,12 +117,13 @@ public class LotProduit implements IData{
 		}
 	}
 
-	public LotProduit(int idProduit, double prixVenteUni, double quantite, Date peremption) {
+	public LotProduit(int idProduit, double prixVenteUni, double quantite, Date peremption, int idAchat) {
 		super();
 		this.idProduit = idProduit;
 		this.prixVenteUni = prixVenteUni;
 		this.quantite = quantite;
 		this.peremption = peremption;
+		this.idAchat = idAchat;
 		createStruct();
 	}
 
@@ -155,6 +161,14 @@ public class LotProduit implements IData{
 
 	public int getIdLotProduit() {
 		return idLotProduit;
+	}
+
+	public int getIdAchat() {
+		return idAchat;
+	}
+
+	public void setIdAchat(int idAchat) {
+		this.idAchat = idAchat;
 	}
 	
 }

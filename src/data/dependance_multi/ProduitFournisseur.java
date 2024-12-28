@@ -62,6 +62,7 @@ public class ProduitFournisseur implements IData{
 		try {
 			statement.setInt(1, idProduit);
 			statement.setString(2, siret);
+			statement.setDouble(3, prixVenteUni);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -73,23 +74,26 @@ public class ProduitFournisseur implements IData{
 		try {
 			statement.setInt(1, idProduit);
 			statement.setString(2, siret);
+			statement.setDouble(3, prixVenteUni);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public ProduitFournisseur(int idProduit, String siret) {
+	public ProduitFournisseur(int idProduit, String siret, double prix) {
 		super();
 		this.idProduit = idProduit;
 		this.siret = siret;
+		this.prixVenteUni = prix;
 		createStruct();
 	}
 	
-	public ProduitFournisseur(Produit p, Fournisseur f) {
+	public ProduitFournisseur(Produit p, Fournisseur f, double prix) {
 		super();
 		this.idProduit = p.getIdProduit();
 		this.siret = f.getSiret();
+		this.prixVenteUni = prix;
 		createStruct();
 	}
 	
@@ -107,6 +111,7 @@ public class ProduitFournisseur implements IData{
 			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
 				this.idProduit = rs.getInt("id_produit");
 				this.siret = rs.getString("siret");
+				this.prixVenteUni = rs.getDouble("prix_vente_uni");
 			}else {
 				System.err.println("Erreur: pas le bonne objet/table pour la récupération de liaison produit fourniseur");
 			}
