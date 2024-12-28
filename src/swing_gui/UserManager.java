@@ -57,8 +57,6 @@ public class UserManager {
 				String storedPassword = rs.getString("password"); // Récupération du mot de passe correspondant à
 																	// l'utilisateur trouvé
 				String hashedPassword = hashPassword(password); // Hachage du mot de passe entré par l'utilisateur
-				
-				System.out.println(hashedPassword);
 
 				if (hashedPassword.equals(storedPassword))
 					return true; // Connexion valide si le mot de passe correspond avec celui entré par
@@ -184,9 +182,7 @@ public class UserManager {
 	// Supprimer un utilisateur donné
 
 	public static boolean deleteUser(String username) {
-
 		String query = "DELETE FROM utilisateur WHERE username = ?";
-
 		try (Connection conn = Connexion.getConnexion(); PreparedStatement stmt = conn.prepareStatement(query)) {
 
 			stmt.setString(1, username);
@@ -206,24 +202,20 @@ public class UserManager {
 	// Savoir si un nom d'utilisateur est déjà utilisé
 
 	public static boolean isUsernameAlreadyTaken(String username) {
-
-		String query = "SELECT username FROM utilisateur";
-
-		try (Connection conn = Connexion.getConnexion();
-				PreparedStatement stmt = conn.prepareStatement(query);
-				ResultSet rs = stmt.executeQuery()) {
+		String query = "SELECT COUNT(username) FROM utilisateur WHERE username = ?";
+		try (Connection conn = Connexion.getConnexion(); PreparedStatement stmt = conn.prepareStatement(query)) {
 
 			stmt.setString(1, username);
+			ResultSet rs = stmt.executeQuery();
+
 			if (rs.next()) {
 				return rs.getInt(1) > 0;
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return false;
-
 	}
 
 }

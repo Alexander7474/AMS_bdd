@@ -49,6 +49,9 @@ public class Fournisseur implements IData{
 	@Override
 	public HashMap<String, fieldType> getMap() {
 		// TODO Auto-generated method stub
+		if(map == null) {
+			createStruct();
+		}
 		return map;
 	}
 
