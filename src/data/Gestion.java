@@ -220,7 +220,38 @@ public class Gestion {
 	}
 	
 	public static void update(IData oldOne, IData newOne, String table) {
-		//TODO
+		//on récupère la map de filedType de la table
+		HashMap<String, fieldType> tableMap = null;
+		try {
+			tableMap = structTable(table, false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// si la table est bien celle qui stock la data
+		if(tableMap != null && oldOne.check(tableMap) && newOne.check(tableMap)) {
+			String query = "UPDATE "+ table + " SET " + newOne.getValuesEq() + " WHERE " + oldOne.getValuesEq();
+			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query);) {
+				newOne.composeStatementEq(statement);
+				statement.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			System.err.println("Erreur lors de la suppression " + table + ", la map de la table ne correspond pas !");
+			for(String str : tableMap.keySet()) {
+				System.out.println(str + ": " + tableMap.get(str));
+			}
+			for(String str : oldOne.getMap().keySet()) {
+				System.out.println(str + ": " + oldOne.getMap().get(str));
+			}
+
+			for(String str : newOne.getMap().keySet()) {
+				System.out.println(str + ": " + newOne.getMap().get(str));
+			}
+		}
 	}
 	
 }

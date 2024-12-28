@@ -93,7 +93,7 @@ CREATE TABLE commande (
   siret VARCHAR(14),
   quantite DOUBLE PRECISION NOT NULL, -- oublie de la quantité sur la précédente version
   FOREIGN KEY (siret) REFERENCES fournisseur(siret),
-  FOREIGN KEY (id_lot_produit) REFERENCES lot_produit(id_lot_produit)
+  FOREIGN KEY (id_produit) REFERENCES produit(id_produit)
 );
 
 CREATE TABLE achat (

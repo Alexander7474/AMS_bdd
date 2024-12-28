@@ -14,6 +14,7 @@ import data.entity.Produit;
 public class ProduitFournisseur implements IData{
 	private int idProduit;
 	private String siret;
+	private double prixVenteUni;
 	
 	private String values;
 	private String valuesEq;
@@ -25,10 +26,11 @@ public class ProduitFournisseur implements IData{
 	
 		map.put("id_produit", fieldType.INT4);
 		map.put("siret", fieldType.VARCHAR);
+		map.put("prix_vente_uni", fieldType.FLOAT8);
 		
-		values = "(id_produit, siret) VALUES (?, ?)"; 
+		values = "(id_produit, siret, prix_vente_uni) VALUES (?, ?, ?)"; 
 
-		valuesEq = "(id_produit, siret) VALUES (?, ?)"; 
+		valuesEq = "(id_produit, siret, prix_ventre_uni) = (?, ?, ?)"; 
 	}
 
 	@Override
@@ -129,5 +131,15 @@ public class ProduitFournisseur implements IData{
 	public void setSiret(String siret) {
 		this.siret = siret;
 	}
+
+	public double getPrixVenteUni() {
+		return prixVenteUni;
+	}
+
+	public void setPrixVenteUni(double prixVenteUni) {
+		this.prixVenteUni = prixVenteUni;
+	}
+	
+	
 
 }
