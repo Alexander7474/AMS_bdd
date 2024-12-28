@@ -20,11 +20,18 @@ public class SuppliersTab {
 
 		// ==============================================================
 
+		// Création des couleurs
+
+		Color grisDoux = new Color(51, 51, 51);
+		Color jauneDoux = new Color(255, 183, 77);
+
+		// ==============================================================
+
 		// Création du titre de l'onglet
 
 		JLabel titleLabelSuppliers = new JLabel("Onglet des fournisseurs", SwingConstants.CENTER);
 		titleLabelSuppliers.setFont(new Font("Arial", Font.BOLD, 20));
-		titleLabelSuppliers.setForeground(new Color(51, 51, 51));
+		titleLabelSuppliers.setForeground(grisDoux);
 		GridBagConstraints cstSuppliers = new GridBagConstraints();
 		cstSuppliers.gridy = 0;
 		cstSuppliers.gridx = 0;
@@ -37,12 +44,12 @@ public class SuppliersTab {
 
 		String[] columnNames = { "SIRET", "Nom", "Adresse", "Téléphone", "Email" }; // Colonnes du tableau
 		Vector<IData> data = new Vector<>(); // Les fournisseurs seront dans le vecteur data
-		
+
 		// recup des info dans la base
 		try {
 			Statement statement = Connexion.getConnexion().createStatement();
-			try(ResultSet rs = statement.executeQuery("SELECT * FROM fournisseur")){
-				while(rs.next()) {
+			try (ResultSet rs = statement.executeQuery("SELECT * FROM fournisseur")) {
+				while (rs.next()) {
 					Fournisseur f = new Fournisseur(rs);
 					data.add(f);
 				}
@@ -51,7 +58,6 @@ public class SuppliersTab {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
 		Vector<Vector<String>> tableData = new Vector<>();
 
@@ -77,8 +83,8 @@ public class SuppliersTab {
 		// Bouton pour insérer un fournisseur
 
 		JButton insertSupplierButton = new JButton("Ajouter un fournisseur");
-		insertSupplierButton.setForeground(new Color(51, 51, 51));
-		insertSupplierButton.setBackground(new Color(255, 183, 77));
+		insertSupplierButton.setForeground(grisDoux);
+		insertSupplierButton.setBackground(jauneDoux);
 		cstSuppliers.gridy = 2;
 		contentPanel.add(insertSupplierButton, cstSuppliers);
 
@@ -126,8 +132,8 @@ public class SuppliersTab {
 		// Bouton pour modifier un fournisseur
 
 		JButton editSupplierButton = new JButton("Modifier un fournisseur");
-		editSupplierButton.setForeground(new Color(51, 51, 51));
-		editSupplierButton.setBackground(new Color(255, 183, 77));
+		editSupplierButton.setForeground(grisDoux);
+		editSupplierButton.setBackground(jauneDoux);
 		cstSuppliers.gridy = 3;
 		contentPanel.add(editSupplierButton, cstSuppliers);
 
@@ -171,7 +177,7 @@ public class SuppliersTab {
 				Fournisseur fournisseur = new Fournisseur(siretField.getText(), nomField.getText(),
 						adresseField.getText(), numeroTelField.getText(), emailField.getText());
 				try {
-					Gestion.update(oldSupplier, fournisseur, "fournisseurs"); // !!! update n'est pas encore défini
+					Gestion.update(oldSupplier, fournisseur, "fournisseur"); // !!! update n'est pas encore défini
 					JOptionPane.showMessageDialog(frame, "Fournisseur modifié avec succès !");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur : " + ex.getMessage(), "Erreur",
@@ -185,8 +191,8 @@ public class SuppliersTab {
 		// Bouton pour supprimer un fournisseur
 
 		JButton deleteSupplierButton = new JButton("Supprimer un fournisseur");
-		deleteSupplierButton.setForeground(new Color(51, 51, 51));
-		deleteSupplierButton.setBackground(new Color(255, 183, 77));
+		deleteSupplierButton.setForeground(grisDoux);
+		deleteSupplierButton.setBackground(jauneDoux);
 		cstSuppliers.gridy = 4;
 		contentPanel.add(deleteSupplierButton, cstSuppliers);
 
@@ -226,8 +232,8 @@ public class SuppliersTab {
 		// Bouton pour ajouter un contact
 
 		JButton insertContactButton = new JButton("Ajouter un contact");
-		insertContactButton.setForeground(new Color(51, 51, 51));
-		insertContactButton.setBackground(new Color(255, 183, 77));
+		insertContactButton.setForeground(grisDoux);
+		insertContactButton.setBackground(jauneDoux);
 		cstSuppliers.gridy = 5;
 		contentPanel.add(insertContactButton, cstSuppliers);
 
@@ -261,7 +267,7 @@ public class SuppliersTab {
 							emailField.getText());
 					Fournisseur selectedSupplier = (Fournisseur) data.get(selectedRow);
 					ContactFournisseur item = new ContactFournisseur(contact, selectedSupplier);
-					Gestion.insert(item, "contact_fournisseurs");
+					Gestion.insert(item, "contact_fournisseur");
 					JOptionPane.showMessageDialog(frame, "Contact ajouté avec succès !");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur lors de l'ajout du contact : " + ex.getMessage(),
@@ -275,8 +281,8 @@ public class SuppliersTab {
 		// Bouton pour afficher les contacts
 
 		JButton viewContactsButton = new JButton("Afficher les contacts");
-		viewContactsButton.setForeground(new Color(51, 51, 51));
-		viewContactsButton.setBackground(new Color(255, 183, 77));
+		viewContactsButton.setForeground(grisDoux);
+		viewContactsButton.setBackground(jauneDoux);
 		cstSuppliers.gridy = 6;
 		contentPanel.add(viewContactsButton, cstSuppliers);
 
@@ -292,7 +298,7 @@ public class SuppliersTab {
 			// Test de vérification des contacts manuellement
 			contacts.add(new Contact("Florent", "CAGNARD", "0101010101", "florent.cagnard@alumni.univ-avignon.fr"));
 			contacts.add(new Contact("Alexandre", "LANTERNIER", "0202020202",
-					"alexandre.lanternier@alumni.univ-avignon.fr"));
+					"alexandre.lanternier@alumni.univ-avignon.fr")); // < SQL
 
 			String[] contactColumnNames = { "Nom", "Prénom", "Téléphone", "Email" };
 			Vector<Vector<String>> contactTableData = new Vector<>();
@@ -322,8 +328,8 @@ public class SuppliersTab {
 
 		// Création d'un bouton
 		JButton deleteContactButton = new JButton("Supprimer un contact");
-		deleteContactButton.setForeground(new Color(51, 51, 51));
-		deleteContactButton.setBackground(new Color(255, 183, 77));
+		deleteContactButton.setForeground(grisDoux);
+		deleteContactButton.setBackground(jauneDoux);
 		cstSuppliers.gridy = 7;
 		contentPanel.add(deleteContactButton, cstSuppliers);
 
@@ -388,7 +394,7 @@ public class SuppliersTab {
 
 				if (confirm == JOptionPane.YES_OPTION) {
 					try {
-						Gestion.delete(contactToDelete, "contact_fournisseurs"); // Appel de la fonction delete dans
+						Gestion.delete(contactToDelete, "contact_fournisseur"); // Appel de la fonction delete dans
 																					// gestion
 						JOptionPane.showMessageDialog(contactsFrame, "Contact supprimé avec succès !");
 					} catch (Exception ex) {

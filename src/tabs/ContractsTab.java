@@ -29,6 +29,13 @@ public class ContractsTab {
 
 		// ==============================================================
 
+		// Création des couleurs
+
+		Color grisDoux = new Color(51, 51, 51);
+		Color jauneDoux = new Color(255, 183, 77);
+
+		// ==============================================================
+
 		// Création du titre de l'onglet
 
 		JLabel titleLabelContracts = new JLabel("Onglet des contrats", SwingConstants.CENTER);
@@ -74,8 +81,8 @@ public class ContractsTab {
 		// Bouton pour ajouter un contrat
 
 		JButton addContractButton = new JButton("Ajouter un contrat");
-		addContractButton.setForeground(new Color(51, 51, 51));
-		addContractButton.setBackground(new Color(255, 183, 77));
+		addContractButton.setForeground(grisDoux);
+		addContractButton.setBackground(jauneDoux);
 		cstContracts.gridy = 2;
 		contentPanel.add(addContractButton, cstContracts);
 
@@ -102,7 +109,7 @@ public class ContractsTab {
 					JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
 				try {
-					
+
 					Contrat newContrat = new Contrat(siretField.getText(), Integer.parseInt(produitField.getText()),
 							Double.parseDouble(prixField.getText()), dateDebutField.getText(), dateFinField.getText());
 
@@ -125,8 +132,8 @@ public class ContractsTab {
 		// Bouton pour supprimer un contrat
 
 		JButton deleteContractButton = new JButton("Supprimer un contrat");
-		deleteContractButton.setForeground(new Color(51, 51, 51));
-		deleteContractButton.setBackground(new Color(255, 183, 77));
+		deleteContractButton.setForeground(grisDoux);
+		deleteContractButton.setBackground(jauneDoux);
 		cstContracts.gridy = 3;
 		contentPanel.add(deleteContractButton, cstContracts);
 
@@ -158,8 +165,8 @@ public class ContractsTab {
 		// Bouton pour modifier un contrat
 
 		JButton editContractButton = new JButton("Modifier un contrat");
-		editContractButton.setForeground(new Color(51, 51, 51));
-		editContractButton.setBackground(new Color(255, 183, 77));
+		editContractButton.setForeground(grisDoux);
+		editContractButton.setBackground(jauneDoux);
 		cstContracts.gridy = 4;
 		contentPanel.add(editContractButton, cstContracts);
 

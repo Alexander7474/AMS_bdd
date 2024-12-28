@@ -18,9 +18,16 @@ import swing_gui.UserManager;
 public class ParametersTab {
 
 	public static void loadParametersTab(JPanel contentPanel, JFrame frame) {
-		
+
 		// ==============================================================
-		
+
+		// Création des couleurs
+
+		Color grisDoux = new Color(51, 51, 51);
+		Color jauneDoux = new Color(255, 183, 77);
+
+		// ==============================================================
+
 		// Création du titre de l'onglet
 
 		JLabel titleLabelParameters = new JLabel("Onglet des paramètres", SwingConstants.CENTER);
@@ -30,15 +37,15 @@ public class ParametersTab {
 		cstParameters.gridx = 0;
 		cstParameters.insets = new Insets(10, 10, 10, 10);
 		contentPanel.add(titleLabelParameters, cstParameters);
-		
+
 		// ==============================================================
 
 		// Ajouter un utilisateur
-		
+
 		// Création du bouton
 		JButton addUserButton = new JButton("Ajouter un utilisateur");
-		addUserButton.setForeground(new Color(51, 51, 51));
-		addUserButton.setBackground(new Color(255, 183, 77));
+		addUserButton.setForeground(grisDoux);
+		addUserButton.setBackground(jauneDoux);
 		cstParameters.gridy = 1;
 		contentPanel.add(addUserButton, cstParameters);
 
@@ -78,15 +85,15 @@ public class ParametersTab {
 			else
 				JOptionPane.showMessageDialog(null, "Échec de l'ajout de l'utilisateur.");
 		});
-		
+
 		// ==============================================================
 
 		// Modifier le mot de passe
-		
+
 		// Création du bouton
 		JButton updateUserButton = new JButton("Modifier le mot de passe");
-		updateUserButton.setForeground(new Color(51, 51, 51));
-		updateUserButton.setBackground(new Color(255, 183, 77));
+		updateUserButton.setForeground(grisDoux);
+		updateUserButton.setBackground(jauneDoux);
 		cstParameters.gridy = 2;
 		contentPanel.add(updateUserButton, cstParameters);
 
@@ -103,15 +110,15 @@ public class ParametersTab {
 			else
 				JOptionPane.showMessageDialog(null, "Échec de la mise à jour du mot de passe.");
 		});
-		
+
 		// ==============================================================
 
 		// Afficher les utilisateurs
-		
+
 		// Création de ce bouton
 		JButton viewUsersButton = new JButton("Afficher les utilisateurs");
-		viewUsersButton.setForeground(new Color(51, 51, 51));
-		viewUsersButton.setBackground(new Color(255, 183, 77));
+		viewUsersButton.setForeground(grisDoux);
+		viewUsersButton.setBackground(jauneDoux);
 		cstParameters.gridy = 3;
 		contentPanel.add(viewUsersButton, cstParameters);
 
@@ -125,13 +132,13 @@ public class ParametersTab {
 
 			JOptionPane.showMessageDialog(frame, userList.toString(), "Utilisateurs", JOptionPane.INFORMATION_MESSAGE);
 		});
-		
+
 		// ==============================================================
 
 		// Supprimer un utilisateur
 		JButton deleteUserButton = new JButton("Supprimer un utilisateur");
-		deleteUserButton.setForeground(new Color(51, 51, 51));
-		deleteUserButton.setBackground(new Color(255, 183, 77));
+		deleteUserButton.setForeground(grisDoux);
+		deleteUserButton.setBackground(jauneDoux);
 		cstParameters.gridy = 4;
 		contentPanel.add(deleteUserButton, cstParameters);
 

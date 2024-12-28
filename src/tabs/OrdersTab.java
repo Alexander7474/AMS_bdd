@@ -28,7 +28,14 @@ import data.entity.Commande;
 public class OrdersTab {
 
 	public static void loadOrdersTab(JPanel contentPanel, JFrame frame) {
-		
+
+		// ==============================================================
+
+		// Création des couleurs
+
+		Color grisDoux = new Color(51, 51, 51);
+		Color jauneDoux = new Color(255, 183, 77);
+
 		// ==============================================================
 
 		// Titre de l'onglet
@@ -39,18 +46,18 @@ public class OrdersTab {
 		cstOrders.gridx = 0;
 		cstOrders.insets = new Insets(10, 10, 10, 10);
 		contentPanel.add(titleLabelOrders, cstOrders);
-		
+
 		// ==============================================================
-		
+
 		// Création de la List dans laquelle seront stockées les commandes
 
-		List<IData> ordersList = new ArrayList<>(); 
+		List<IData> ordersList = new ArrayList<>();
 		ordersList.add(new Commande(10, "14523652895412", 5.0));// >!SQL
-		
+
 		// ==============================================================
 
 		// Affichage d'un tableau des commandes
-		
+
 		String[] columnNamesOrders = { "Produit", "Fournisseur", "Quantité" };
 		DefaultTableModel tableModelOrders = new DefaultTableModel(columnNamesOrders, 0);
 
@@ -65,15 +72,15 @@ public class OrdersTab {
 		JScrollPane scrollPaneOrders = new JScrollPane(ordersTable);
 		cstOrders.gridy = 1;
 		contentPanel.add(scrollPaneOrders, cstOrders);
-		
+
 		// ==============================================================
 
 		// Bouton pour passer une commande
-		
+
 		// Création du bouton
 		JButton addOrderButton = new JButton("Passer une commande");
-		addOrderButton.setForeground(new Color(51, 51, 51));
-		addOrderButton.setBackground(new Color(255, 183, 77));
+		addOrderButton.setForeground(grisDoux);
+		addOrderButton.setBackground(jauneDoux);
 		cstOrders.gridy = 2;
 		contentPanel.add(addOrderButton, cstOrders);
 
@@ -112,13 +119,14 @@ public class OrdersTab {
 				}
 			}
 		});
-		
+
 		// ==============================================================
 
 		// Bouton pour valider une commande
+		
 		JButton validateOrderButton = new JButton("Valider une commande");
-		validateOrderButton.setForeground(new Color(51, 51, 51));
-		validateOrderButton.setBackground(new Color(255, 183, 77));
+		validateOrderButton.setForeground(grisDoux);
+		validateOrderButton.setBackground(jauneDoux);
 		cstOrders.gridy = 3;
 		contentPanel.add(validateOrderButton, cstOrders);
 
@@ -144,7 +152,7 @@ public class OrdersTab {
 				// Supprimer de la List
 				ordersList.remove(selectedCommande);
 				tableModelOrders.removeRow(selectedRow);
-				
+
 				Gestion.delete(selectedCommande, "commande"); // Supprimer la commande de la table commande
 
 				JOptionPane.showMessageDialog(frame, "Commande validée et transformée en achat !");
@@ -153,7 +161,7 @@ public class OrdersTab {
 						"Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		});
-		
+
 		// ==============================================================
 
 		contentPanel.revalidate();

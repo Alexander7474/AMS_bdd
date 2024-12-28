@@ -31,6 +31,13 @@ public class PurchasesTab {
 
 		// ==============================================================
 
+		// Création des couleurs
+
+		Color grisDoux = new Color(51, 51, 51);
+		Color jauneDoux = new Color(255, 183, 77);
+
+		// ==============================================================
+
 		// Création Titre de l'onglet
 
 		JLabel titleLabelPurchases = new JLabel("Onglet des achats", SwingConstants.CENTER);
@@ -76,8 +83,8 @@ public class PurchasesTab {
 		// Bouton pour créer une commande en fonction des stocks
 
 		JButton suggestOrdersButton = new JButton("Proposer des commandes");
-		suggestOrdersButton.setForeground(new Color(51, 51, 51));
-		suggestOrdersButton.setBackground(new Color(255, 183, 77));
+		suggestOrdersButton.setForeground(grisDoux);
+		suggestOrdersButton.setBackground(jauneDoux);
 		cstPurchases.gridy = 2;
 		contentPanel.add(suggestOrdersButton, cstPurchases);
 
@@ -95,8 +102,8 @@ public class PurchasesTab {
 		// Bouton pour valider ou modifier une commande
 
 		JButton validateOrderButton = new JButton("Valider / Modifier");
-		validateOrderButton.setForeground(new Color(51, 51, 51));
-		validateOrderButton.setBackground(new Color(255, 183, 77));
+		validateOrderButton.setForeground(grisDoux);
+		validateOrderButton.setBackground(jauneDoux);
 		cstPurchases.gridy = 3;
 		contentPanel.add(validateOrderButton, cstPurchases);
 

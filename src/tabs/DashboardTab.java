@@ -50,8 +50,8 @@ public class DashboardTab {
 		List<IData> lotProduitList = new ArrayList<>();
 
 		// Test de simulation
-		lotProduitList.add(new LotProduit(1, 10.5, 50, Date.valueOf("2023-12-30"))); // >SQL
-		lotProduitList.add(new LotProduit(2, 15.0, 100, Date.valueOf("2024-01-10"))); // >SQL
+		lotProduitList.add(new LotProduit(1, 10.5, 50, Date.valueOf("2023-12-30"), 5)); // >SQL
+		lotProduitList.add(new LotProduit(2, 15.0, 100, Date.valueOf("2024-01-10"), 10)); // >SQL
 
 		// ==============================================================
 
