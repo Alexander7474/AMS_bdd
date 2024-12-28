@@ -113,7 +113,7 @@ public class Fournisseur implements IData{
 			if(check(Gestion.structTable(rs.getMetaData().getTableName(1), false))) {
 				this.siret = rs.getString("siret");
 				this.nom = rs.getString("nom");
-				this.adresse = rs.getString("date_vente");
+				this.adresse = rs.getString("adresse");
 				this.numeroTel = rs.getString("numero_tel");
 				this.email = rs.getString("email");
 			}else {

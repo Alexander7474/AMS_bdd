@@ -2,9 +2,13 @@ package tabs;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Vector;
 
+import data.Connexion;
 import data.Gestion;
 import data.IData;
 import data.dependance_multi.ContactFournisseur;
@@ -33,9 +37,21 @@ public class SuppliersTab {
 
 		String[] columnNames = { "SIRET", "Nom", "Adresse", "Téléphone", "Email" }; // Colonnes du tableau
 		Vector<IData> data = new Vector<>(); // Les fournisseurs seront dans le vecteur data
-
-		data.add(new Fournisseur("14523652895412", "the market", "64 avenue de l'avenue", "0505050505",
-				"themarket@market.fr")); // >!SQL
+		
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM fournisseur")){
+				while(rs.next()) {
+					Fournisseur f = new Fournisseur(rs);
+					data.add(f);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 
 		Vector<Vector<String>> tableData = new Vector<>();
 
@@ -97,7 +113,7 @@ public class SuppliersTab {
 
 				try {
 					// Insertion du fournisseur dans la base avec Gestion
-					Gestion.insert(fournisseur, "fournisseurs");
+					Gestion.insert(fournisseur, "fournisseur");
 					JOptionPane.showMessageDialog(frame, "Fournisseur ajouté avec succès !");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur lors de l'ajout du fournisseur : " + ex.getMessage());
@@ -196,7 +212,7 @@ public class SuppliersTab {
 					"Confirmation", JOptionPane.YES_NO_OPTION);
 			if (confirm == JOptionPane.YES_OPTION) {
 				try {
-					Gestion.delete(supplierToDelete, "fournisseurs");
+					Gestion.delete(supplierToDelete, "fournisseur");
 					JOptionPane.showMessageDialog(frame, "Fournisseur supprimé avec succès !");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur : " + ex.getMessage(), "Erreur",
