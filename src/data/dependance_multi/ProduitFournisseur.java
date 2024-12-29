@@ -30,7 +30,7 @@ public class ProduitFournisseur implements IData{
 		
 		values = "(id_produit, siret, prix_vente_uni) VALUES (?, ?, ?)"; 
 
-		valuesEq = "(id_produit, siret, prix_ventre_uni) = (?, ?, ?)"; 
+		valuesEq = "(id_produit, siret, prix_vente_uni) = (?, ?, ?)"; 
 	}
 
 	@Override

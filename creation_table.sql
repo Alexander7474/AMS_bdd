@@ -43,7 +43,7 @@ CREATE TABLE contact_fournisseur (
 );
 
 CREATE TABLE produit (
-  id_produit INT PRIMARY KEY,
+  id_produit BIGSERIAL PRIMARY KEY,
   nom VARCHAR(55) NOT NULL,
   description VARCHAR(500), -- Correction du nom de la colonne
   categorie VARCHAR(100)
@@ -110,14 +110,15 @@ INSERT INTO user_group(nom) VALUES ('admin');
 INSERT INTO utilisateur(id_group, username, password) VALUES (1, 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918');
 
 INSERT INTO fournisseur VALUES ('11111111111111','the fournisseur','somewhere','0606060606','theemail@email.fr');
-INSERT INTO produit(id_produit, nom,description,categorie) VALUES (1,'pomme','fucking apple','fruit');
+INSERT INTO produit(nom,description,categorie) VALUES ('pomme','fucking apple','fruit');
+INSERT INTO produit(nom,description,categorie) VALUES ('bannane','bannanananananana','fruit');
 INSERT INTO commande(id_produit,siret,quantite) VALUES (1,'11111111111111',5);
 INSERT INTO achat(id_commande,prix_achat_uni,date_achat) VALUES (1,2.5,'20-12-2022');
 INSERT INTO lot_produit(id_produit, prix_vente_uni, quantite, peremption, id_achat) VALUES (1,3.5,5,'20-12-2025',1);
 INSERT INTO vente(id_lot_produit, date_vente, prix_vente_uni, quantite) VALUES(1,'25-12-2023',3.5,2);
 INSERT INTO contrat(siret, id_produit, prix_uni, date_debut, date_fin) VALUES ('11111111111111', 1, 2.5, '22-10-2000', '22-10-2100');
 INSERT INTO contrat(siret, id_produit, prix_uni, date_debut, date_fin) VALUES ('11111111111111', 1, 5.5, '22-10-1989', '22-10-2001');
- 
- 
+INSERT INTO contact(nom, prenom, numero_tel, email) VALUES('jack','jean','0505050505','jack@jean.com');
+INSERT INTO contact_fournisseur(siret, id_contact) VALUES('11111111111111',1);
  
  

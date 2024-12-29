@@ -137,11 +137,9 @@ public class Gestion {
 			return;
 		}
 		
-		//on ouver une connection à la db
-		Connection connection = Connexion.getConnexion();
 		
 		//on créé un statement pour faire notre requete
-		try(Statement statement = connection.createStatement()){
+		try(Statement statement = Connexion.getConnexion().createStatement()){
             statement.executeQuery(query);
 		}catch (SQLException e) {
             System.err.println("Erreur creation statement:" + e.getMessage());
@@ -174,8 +172,11 @@ public class Gestion {
 				data.composeStatement(statement);
 				statement.executeUpdate();
 				ResultSet rs = statement.getGeneratedKeys();
-				rs.next();
-				return rs.getInt(1);
+				if(rs.next()) {
+					return rs.getInt(1);
+				}else {
+					return -1;
+				}
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -190,7 +191,7 @@ public class Gestion {
 			}
 		}
 		
-		return 0;
+		return -1;
 	}
 	
 	public static void delete(IData data, String table) {

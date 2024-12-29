@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -73,7 +74,7 @@ public class SalesTab {
 		// ==============================================================
 
 		// Affichage du tableau des ventes
-		String[] columnNamesSales = { "Produit", "Date", "Prix unitaire", "Quantité", "Total" };
+		String[] columnNamesSales = { "Lot produit", "Date", "Prix unitaire", "Quantité", "Total" };
 		DefaultTableModel tableModelSales = new DefaultTableModel(columnNamesSales, 0);
 
 		for (IData item : salesList) {
@@ -102,34 +103,49 @@ public class SalesTab {
 		addSaleButton.addActionListener(addSaleEvent -> {
 			JTextField produitField = new JTextField(15);
 			JTextField dateField = new JTextField(15);
-			JTextField priceField = new JTextField(15);
 			JTextField quantityField = new JTextField(15);
 
 			JPanel saleForm = new JPanel(new GridLayout(4, 2));
-			saleForm.add(new JLabel("Produit (ID) :"));
+			saleForm.add(new JLabel("Lot Produit (ID) :"));
 			saleForm.add(produitField);
 			saleForm.add(new JLabel("Date (AAAA-MM-JJ) :"));
 			saleForm.add(dateField);
-			saleForm.add(new JLabel("Prix unitaire :"));
-			saleForm.add(priceField);
 			saleForm.add(new JLabel("Quantité :"));
 			saleForm.add(quantityField);
 
 			int result = JOptionPane.showConfirmDialog(frame, saleForm, "Ajouter une vente",
 					JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				try {
-					Vente newVente = new Vente(Integer.parseInt(produitField.getText()), dateField.getText(),
-							Double.parseDouble(priceField.getText()), Integer.parseInt(quantityField.getText()));
-
-					salesList.add(newVente);
-					tableModelSales.addRow(
-							new Object[] { newVente.getIdLotProduit(), newVente.getDate(), newVente.getPrixVenteUni(),
-									newVente.getQuantite(), newVente.getPrixVenteUni() * newVente.getQuantite() });
-
-					Gestion.insert(newVente, "vente");
-
-					JOptionPane.showMessageDialog(frame, "Vente ajoutée avec succès !");
+				try {	
+					
+					String query = "SELECT * FROM lot_produit WHERE id_lot_produit = " + produitField.getText();
+					try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+						ResultSet rs = statement.executeQuery();
+						if(rs.next()) {
+							Vente newVente = new Vente(Integer.parseInt(produitField.getText()), dateField.getText(),
+									rs.getDouble("prix_vente_uni"), Double.parseDouble(quantityField.getText()));
+							if(rs.getDouble("quantite") >= newVente.getQuantite()) {
+								
+								String query2 = "UPDATE lot_produit SET quantite = quantite - " + newVente.getQuantite() + " WHERE id_lot_produit = " + newVente.getIdLotProduit();
+								try(PreparedStatement statement2 = Connexion.getConnexion().prepareStatement(query2)){
+									statement2.executeUpdate();
+								}
+								
+								salesList.add(newVente);
+								tableModelSales.addRow(
+										new Object[] { newVente.getIdLotProduit(), newVente.getDate(), newVente.getPrixVenteUni(),
+												newVente.getQuantite(), newVente.getPrixVenteUni() * newVente.getQuantite() });
+								JOptionPane.showMessageDialog(frame, "Vente ajoutée avec succès !");
+								Gestion.insert(newVente, "vente");
+							}else {
+								JOptionPane.showMessageDialog(frame, "Vente impossible car pas assez de stock !");
+							}
+						}else {
+							JOptionPane.showMessageDialog(frame, "Vente impossible lot non trouvé !");
+						}
+					}
+					
+					
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur lors de l'ajout de la vente : " + ex.getMessage(),
 							"Erreur", JOptionPane.ERROR_MESSAGE);

@@ -31,7 +31,7 @@ public class Contact implements IData{
 		map.put("email", fieldType.VARCHAR);
 		
 		values = "(nom, prenom, numero_tel, email) VALUES (?, ?, ?, ?)"; 
-		valuesEq = "(idContact, nom, prenom, numero_tel, email) = (?, ?, ?, ?, ?)"; 
+		valuesEq = "(id_contact, nom, prenom, numero_tel, email) = (?, ?, ?, ?, ?)"; 
 	}
 
 	@Override

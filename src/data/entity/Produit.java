@@ -28,6 +28,16 @@ public class Produit implements IData{
 		createStruct();
 	}
 	
+	
+	public Produit(String nom, String desc, String categorie) {
+		super();
+		this.idProduit = 0;
+		this.nom = nom;
+		this.desc = desc;
+		this.cate = categorie;
+		createStruct();
+	}
+	
 	/**
 	 * @brief constructeur à utiliser lors de la récupération des produits dans la base
 	 * 
@@ -89,12 +99,12 @@ public class Produit implements IData{
 	public void createStruct() {
 		map = new HashMap<String, fieldType>();
 		
-		map.put("id_produit", fieldType.INT4);
+		map.put("id_produit", fieldType.BIGSERIAL);
 		map.put("nom", fieldType.VARCHAR);
 		map.put("description", fieldType.VARCHAR);
 		map.put("categorie", fieldType.VARCHAR);
 		
-		values = "(id_produit, nom, description, categorie) VALUES (?, ?, ?, ?)"; 
+		values = "(nom, description, categorie) VALUES (?, ?, ?)"; 
 		valuesEq = "(id_produit, nom, description, categorie) = (?, ?, ?, ?)"; 
 	}
 
@@ -125,10 +135,9 @@ public class Produit implements IData{
 	@Override
 	public void composeStatement(PreparedStatement statement) {
 		try {
-			statement.setInt(1, idProduit);
-			statement.setString(2, nom);
-			statement.setString(3, desc);
-			statement.setString(4, cate);
+			statement.setString(1, nom);
+			statement.setString(2, desc);
+			statement.setString(3, cate);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

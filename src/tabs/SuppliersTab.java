@@ -1,10 +1,16 @@
 package tabs;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -29,7 +35,7 @@ public class SuppliersTab {
 
 		// Création du titre de l'onglet
 
-		JLabel titleLabelSuppliers = new JLabel("Onglet des fournisseurs", SwingConstants.CENTER);
+		JLabel titleLabelSuppliers = new JLabel("Onglet des Fournisseurs", SwingConstants.CENTER);
 		titleLabelSuppliers.setFont(new Font("Arial", Font.BOLD, 20));
 		titleLabelSuppliers.setForeground(grisDoux);
 		GridBagConstraints cstSuppliers = new GridBagConstraints();
@@ -58,7 +64,7 @@ public class SuppliersTab {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+ 
 		Vector<Vector<String>> tableData = new Vector<>();
 
 		for (IData item : data) {
@@ -149,7 +155,6 @@ public class SuppliersTab {
 			Vector<String> row = tableData.get(selectedRow); // Le fournisseur a modifié est stocké dans un vecteur
 																// (row)
 			// Récupération des données de ce fournisseur
-			JTextField siretField = new JTextField(row.get(0));
 			JTextField nomField = new JTextField(row.get(1));
 			JTextField adresseField = new JTextField(row.get(2));
 			JTextField numeroTelField = new JTextField(row.get(3));
@@ -160,8 +165,6 @@ public class SuppliersTab {
 
 			// Mise en forme du formulaire
 			JPanel form = new JPanel(new GridLayout(5, 2));
-			form.add(new JLabel("SIRET : "));
-			form.add(siretField);
 			form.add(new JLabel("Nom : "));
 			form.add(nomField);
 			form.add(new JLabel("Adresse : "));
@@ -174,10 +177,15 @@ public class SuppliersTab {
 			int result = JOptionPane.showConfirmDialog(frame, form, "Modifier un fournisseur",
 					JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				Fournisseur fournisseur = new Fournisseur(siretField.getText(), nomField.getText(),
+				Fournisseur fournisseur = new Fournisseur(oldSupplier.getSiret(), nomField.getText(),
 						adresseField.getText(), numeroTelField.getText(), emailField.getText());
 				try {
-					Gestion.update(oldSupplier, fournisseur, "fournisseur"); // !!! update n'est pas encore défini
+					// Mise à jour dans la base de données
+					String query = "UPDATE fournisseur SET " + fournisseur.getValuesEq() + " WHERE siret = '" + oldSupplier.getSiret() + "'";
+					try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+						fournisseur.composeStatementEq(statement);
+						statement.executeUpdate();
+					}
 					JOptionPane.showMessageDialog(frame, "Fournisseur modifié avec succès !");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur : " + ex.getMessage(), "Erreur",
@@ -229,22 +237,172 @@ public class SuppliersTab {
 
 		// ==============================================================
 
+		
+		
+		
+		//===============================================================
+		// Titre de l'onglet contact
+		JLabel titleLabelContact = new JLabel("Onglet des Contact", SwingConstants.CENTER);
+		titleLabelContact.setFont(new Font("Arial", Font.BOLD, 20));
+		GridBagConstraints cstContact = new GridBagConstraints();
+		cstContact.gridy = 0;
+		cstContact.gridx = 50;
+		cstContact.insets = new Insets(10, 10, 10, 10);
+		contentPanel.add(titleLabelContact, cstContact);
+
+		String[] columnNamesContact = { "ID contact" , "Nom", "Prénom" , "Téléphone", "Email"};
+		DefaultTableModel tableModelContact = new DefaultTableModel(columnNamesContact, 0);
+		JTable contactTable = new JTable(tableModelContact);
+		JScrollPane scrollPaneContact = new JScrollPane(contactTable);
+		cstContact.gridy = 1;
+		contentPanel.add(scrollPaneContact, cstContact);
+		
+		List<IData> contactsList = new ArrayList<>(); 
+		
+		ListSelectionModel selectionModel = suppliersTable.getSelectionModel();
+        selectionModel.addListSelectionListener(new ListSelectionListener() {
+        	
+  
+        	@Override
+        	public void valueChanged(ListSelectionEvent ev) {
+        		
+        		tableModelContact.setRowCount(0);
+        		contactsList.clear();
+        	
+				int selectedRowC = suppliersTable.getSelectedRow();
+				if (selectedRowC != -1) {
+					// recup des info dans la base
+					
+					try {
+						Statement statement = Connexion.getConnexion().createStatement();
+						try (ResultSet rs = statement.executeQuery("SELECT c.* "
+								+ "FROM contact_fournisseur cf "
+								+ "JOIN contact c ON cf.id_contact = c.id_contact "
+								+ "WHERE siret = '" + tableData.get(selectedRowC).get(0) + "'")) {
+							while (rs.next()) {
+								Contact c = new Contact(rs);
+								contactsList.add(c);
+							}
+						}
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		
+					for (IData item : contactsList) {
+						if (item instanceof Contact contact) {
+							tableModelContact.addRow(new Object[] { contact.getIdContact(), contact.getNom(), contact.getPrenom(), contact.getNumeroTel(), contact.getEmail() });
+						}
+					}
+				}
+				
+				titleLabelContact.setText("Onglet des Contacts ("+tableData.get(selectedRowC).get(1)+")");
+        	}
+        });
+        
+     // ==============================================================
+
+ 		// Bouton pour lier les contact
+ 		
+ 		JButton linkContactButton = new JButton("Lier contact/fournisseur");
+ 		linkContactButton.setForeground(grisDoux);
+ 		linkContactButton.setBackground(jauneDoux);
+ 		cstSuppliers.gridy = 5;
+ 		cstSuppliers.gridx = 0;
+ 		contentPanel.add(linkContactButton, cstSuppliers);
+
+ 		// Action au clique sur ce bouton
+ 		linkContactButton.addActionListener(deleteContactEvent -> {
+     	
+ 			int selectedRowC = contactTable.getSelectedRow();
+ 			int selectedRowS = suppliersTable.getSelectedRow();
+ 			
+ 			if (selectedRowC != -1 && selectedRowS != -1) {
+ 				
+ 				ContactFournisseur cf = new ContactFournisseur((Contact) contactsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS));
+ 				
+ 				Gestion.insert(cf, "contact_fournisseur");
+ 			}
+ 		});
+ 		
+ 	     // ==============================================================
+
+ 	 		// Bouton pour delier les contact
+ 	 		
+ 	 		JButton unlinkContactButton = new JButton("Délier contact/fournisseur");
+ 	 		unlinkContactButton.setForeground(grisDoux);
+ 	 		unlinkContactButton.setBackground(jauneDoux);
+ 	 		cstSuppliers.gridy = 6;
+ 	 		cstSuppliers.gridx = 0;
+ 	 		contentPanel.add(unlinkContactButton, cstSuppliers);
+
+ 	 		// Action au clique sur ce bouton
+ 	 		unlinkContactButton.addActionListener(deleteContactEvent -> {
+ 	     	
+ 	 			int selectedRowC = contactTable.getSelectedRow();
+ 	 			int selectedRowS = suppliersTable.getSelectedRow();
+ 	 			if (selectedRowC != -1 && selectedRowS != -1) {
+ 	 				ContactFournisseur cf = new ContactFournisseur((Contact) contactsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS));
+ 	 				
+ 	 				Gestion.delete(cf, "contact_fournisseur");
+ 	 			}
+ 	 		});
+        
+		// ==============================================================
+
+		// Bouton pour afficher les contacts
+		
+		JButton showContactButton = new JButton("Afficher tous les contact(s)");
+		showContactButton.setForeground(grisDoux);
+		showContactButton.setBackground(jauneDoux);
+		cstSuppliers.gridy = 4;
+		cstSuppliers.gridx = 50;
+		contentPanel.add(showContactButton, cstSuppliers);
+
+		// Action au clique sur ce bouton
+		showContactButton.addActionListener(deleteContactEvent -> {
+			tableModelContact.setRowCount(0);
+    		contactsList.clear();
+    	
+			int selectedRowC = suppliersTable.getSelectedRow();
+			if (selectedRowC != -1) {
+				// recup des info dans la base
+				
+				try {
+					Statement statement = Connexion.getConnexion().createStatement();
+					try (ResultSet rs = statement.executeQuery("SELECT * FROM contact")) {
+						while (rs.next()) {
+							Contact c = new Contact(rs);
+							contactsList.add(c);
+						}
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	
+				for (IData item : contactsList) {
+					if (item instanceof Contact contact) {
+						tableModelContact.addRow(new Object[] { contact.getIdContact(), contact.getNom(), contact.getPrenom(), contact.getNumeroTel(), contact.getEmail() });
+					}
+				}
+				
+				titleLabelContact.setText("Onglet des Contacts (ALL)");
+			}
+		});
+
 		// Bouton pour ajouter un contact
 
 		JButton insertContactButton = new JButton("Ajouter un contact");
 		insertContactButton.setForeground(grisDoux);
 		insertContactButton.setBackground(jauneDoux);
-		cstSuppliers.gridy = 5;
+		cstSuppliers.gridy = 2;
+		cstSuppliers.gridx = 50;
 		contentPanel.add(insertContactButton, cstSuppliers);
 
 		insertContactButton.addActionListener(insertContactEvent -> {
-			int selectedRow = suppliersTable.getSelectedRow();
-			if (selectedRow == -1) {
-				JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un fournisseur pour ajouter un contact.",
-						"Erreur", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
+			int selectedRow = 1;
+			
 			JTextField nomField = new JTextField(15);
 			JTextField prenomField = new JTextField(15);
 			JTextField numeroTelField = new JTextField(15);
@@ -265,9 +423,7 @@ public class SuppliersTab {
 				try {
 					Contact contact = new Contact(nomField.getText(), prenomField.getText(), numeroTelField.getText(),
 							emailField.getText());
-					Fournisseur selectedSupplier = (Fournisseur) data.get(selectedRow);
-					ContactFournisseur item = new ContactFournisseur(contact, selectedSupplier);
-					Gestion.insert(item, "contact_fournisseur");
+					Gestion.insert(contact, "contact");
 					JOptionPane.showMessageDialog(frame, "Contact ajouté avec succès !");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur lors de l'ajout du contact : " + ex.getMessage(),
@@ -275,53 +431,7 @@ public class SuppliersTab {
 				}
 			}
 		});
-
-		// ==============================================================
-
-		// Bouton pour afficher les contacts
-
-		JButton viewContactsButton = new JButton("Afficher les contacts");
-		viewContactsButton.setForeground(grisDoux);
-		viewContactsButton.setBackground(jauneDoux);
-		cstSuppliers.gridy = 6;
-		contentPanel.add(viewContactsButton, cstSuppliers);
-
-		viewContactsButton.addActionListener(viewContactsEvent -> {
-			int selectedRow = suppliersTable.getSelectedRow();
-			if (selectedRow == -1) {
-				JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un fournisseur pour afficher ses contacts.",
-						"Erreur", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			Vector<Contact> contacts = new Vector<>();
-			// Test de vérification des contacts manuellement
-			contacts.add(new Contact("Florent", "CAGNARD", "0101010101", "florent.cagnard@alumni.univ-avignon.fr"));
-			contacts.add(new Contact("Alexandre", "LANTERNIER", "0202020202",
-					"alexandre.lanternier@alumni.univ-avignon.fr")); // < SQL
-
-			String[] contactColumnNames = { "Nom", "Prénom", "Téléphone", "Email" };
-			Vector<Vector<String>> contactTableData = new Vector<>();
-
-			for (Contact contact : contacts) {
-				Vector<String> row = new Vector<>();
-				row.add(contact.getNom());
-				row.add(contact.getPrenom());
-				row.add(contact.getNumeroTel());
-				row.add(contact.getEmail());
-				contactTableData.add(row);
-			}
-
-			JTable contactsTable = new JTable(contactTableData, new Vector<>(List.of(contactColumnNames)));
-			JScrollPane contactsScrollPane = new JScrollPane(contactsTable);
-
-			JFrame contactsFrame = new JFrame("Contacts du fournisseur");
-			contactsFrame.add(contactsScrollPane);
-			contactsFrame.setSize(500, 300);
-			contactsFrame.setVisible(true);
-			contactsFrame.setLocationRelativeTo(null);
-		});
-
+		
 		// ==============================================================
 
 		// Bouton pour supprimer un contact
@@ -330,85 +440,39 @@ public class SuppliersTab {
 		JButton deleteContactButton = new JButton("Supprimer un contact");
 		deleteContactButton.setForeground(grisDoux);
 		deleteContactButton.setBackground(jauneDoux);
-		cstSuppliers.gridy = 7;
+		cstSuppliers.gridy = 3;
+		cstSuppliers.gridx = 50;
 		contentPanel.add(deleteContactButton, cstSuppliers);
 
 		// Action au clique sur ce bouton
 		deleteContactButton.addActionListener(deleteContactEvent -> {
-			int selectedRow = suppliersTable.getSelectedRow();
+			int selectedRow = contactTable.getSelectedRow();
 			if (selectedRow == -1) {
-				JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un fournisseur pour supprimer un contact.",
+				JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un contact pour supprimer.",
 						"Erreur", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
-			// Récupération du fournisseur
-			Fournisseur selectedSupplier = (Fournisseur) data.get(selectedRow);
+			// Récupération du contact
+			Contact selectedContact = (Contact) contactsList.get(selectedRow);
 
-			// Affichage des contacts (comme pour le bouton afficher contacts)
-			Vector<Contact> contacts = new Vector<>();
-
-			String[] contactColumnNames = { "Nom", "Prénom", "Téléphone", "Email" };
-			Vector<Vector<String>> contactTableData = new Vector<>();
-
-			for (Contact contact : contacts) {
-				Vector<String> row = new Vector<>();
-				row.add(contact.getNom());
-				row.add(contact.getPrenom());
-				row.add(contact.getNumeroTel());
-				row.add(contact.getEmail());
-				contactTableData.add(row);
+			try {
+				Gestion.execute("DELETE FROM contact_fournisseur WHERE id_contact = " + selectedContact.getIdContact());
+				
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
+			Gestion.delete(selectedContact, "contact");
 
-			JTable contactsTable = new JTable(contactTableData, new Vector<>(List.of(contactColumnNames)));
-			JScrollPane contactsScrollPane = new JScrollPane(contactsTable);
-
-			JFrame contactsFrame = new JFrame("Contacts du fournisseur");
-			contactsFrame.add(contactsScrollPane);
-			contactsFrame.setSize(500, 300);
-			contactsFrame.setVisible(true);
-			contactsFrame.setLocationRelativeTo(null);
-
-			// Récupérer le contact sur lequel on a cliqué dans contactsFrame
-			contactsTable.getSelectionModel().addListSelectionListener(e -> {
-				if (!e.getValueIsAdjusting()) {
-					int contactRow = contactsTable.getSelectedRow();
-					if (contactRow != -1) {
-						deleteContactButton.setEnabled(true);
-					}
-				}
-			});
-
-			// Quand on clique sur le bouton après avoir cliqué sur un contact
-			deleteContactButton.addActionListener(deleteContactAction -> {
-				int contactRow = contactsTable.getSelectedRow();
-				if (contactRow == -1) {
-					JOptionPane.showMessageDialog(contactsFrame, "Veuillez sélectionner un contact à supprimer.",
-							"Erreur", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-
-				Contact contactToDelete = contacts.get(contactRow);
-				int confirm = JOptionPane.showConfirmDialog(contactsFrame,
-						"Êtes-vous sûr de vouloir supprimer ce contact ?", "Confirmation", JOptionPane.YES_NO_OPTION);
-
-				if (confirm == JOptionPane.YES_OPTION) {
-					try {
-						Gestion.delete(contactToDelete, "contact_fournisseur"); // Appel de la fonction delete dans
-																					// gestion
-						JOptionPane.showMessageDialog(contactsFrame, "Contact supprimé avec succès !");
-					} catch (Exception ex) {
-						JOptionPane.showMessageDialog(contactsFrame,
-								"Erreur lors de la suppression du contact : " + ex.getMessage(), "Erreur",
-								JOptionPane.ERROR_MESSAGE);
-					}
-				}
-			});
 		});
+
 
 		contentPanel.revalidate();
 		contentPanel.repaint();
 
 	};
+	
+	// ==============================================================
 
 };
