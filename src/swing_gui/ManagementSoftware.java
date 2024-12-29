@@ -52,6 +52,14 @@ public class ManagementSoftware {
 		// ==============================================================
 
 		// Bouton pour accéder à la gestion des fournisseurs
+		JButton inv = new JButton("Inventaire");
+		inv.setBackground(new Color(255, 183, 77));
+		sidebar.add(inv);
+		sidebar.add(Box.createVerticalStrut(15));
+
+		// ==============================================================
+
+		// Bouton pour accéder à la gestion des fournisseurs
 		JButton suppliers = new JButton("Fournisseurs");
 		suppliers.setBackground(new Color(255, 183, 77));
 		sidebar.add(suppliers);
@@ -84,17 +92,9 @@ public class ManagementSoftware {
 		// ==============================================================
 
 		// Bouton pour accéder à la gestion des commandes
-		JButton orders = new JButton("Commandes");
+		JButton orders = new JButton("Commandes/Achats");
 		orders.setBackground(new Color(255, 183, 77));
 		sidebar.add(orders);
-		sidebar.add(Box.createVerticalStrut(15));
-
-		// ==============================================================
-
-		// Bouton pour accéder à la gestion des achats
-		JButton purchases = new JButton("Achats");
-		purchases.setBackground(new Color(255, 183, 77));
-		sidebar.add(purchases);
 		sidebar.add(Box.createVerticalStrut(15));
 
 		// ==============================================================
@@ -133,6 +133,16 @@ public class ManagementSoftware {
 		cst.gridx = 0;
 		contentPanel.add(titleLabel);
 
+		// ==============================================================
+		
+		//inventaire
+		inv.addActionListener(e -> {
+
+			contentPanel.removeAll();
+
+			InvTab.loadInvTab(contentPanel, frame);
+			
+		});
 		// ==============================================================
 
 		// Onglet des fournisseurs
@@ -185,15 +195,6 @@ public class ManagementSoftware {
 			
 		});
 		
-		// ==============================================================
-
-		purchases.addActionListener(e -> {
-
-			contentPanel.removeAll();
-
-			PurchasesTab.loadPurchasesTab(contentPanel, frame);
-			
-		});
 		
 		// ==============================================================
 

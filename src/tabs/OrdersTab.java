@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,10 +27,13 @@ import javax.swing.table.DefaultTableModel;
 import data.Connexion;
 import data.Gestion;
 import data.IData;
+import data.dependance_multi.ContactFournisseur;
 import data.entity.Achat;
 import data.entity.Commande;
+import data.entity.Contact;
+import data.entity.Contrat;
+import data.entity.Fournisseur;
 import data.entity.LotProduit;
-import data.entity.Produit;
 
 public class OrdersTab {
 
@@ -44,7 +48,7 @@ public class OrdersTab {
 
 		// ==============================================================
 
-		// Titre de l'onglet
+		// Titre de l'onglet commande
 		JLabel titleLabelOrders = new JLabel("Onglet des commandes", SwingConstants.CENTER);
 		titleLabelOrders.setFont(new Font("Arial", Font.BOLD, 20));
 		GridBagConstraints cstOrders = new GridBagConstraints();
@@ -52,6 +56,15 @@ public class OrdersTab {
 		cstOrders.gridx = 0;
 		cstOrders.insets = new Insets(10, 10, 10, 10);
 		contentPanel.add(titleLabelOrders, cstOrders);
+		
+		// Titre de l'onglet achat 
+		JLabel titleLabelPurchase = new JLabel("Onglet des achats", SwingConstants.CENTER);
+		titleLabelPurchase.setFont(new Font("Arial", Font.BOLD, 20));
+		GridBagConstraints cstPurchase = new GridBagConstraints();
+		cstPurchase.gridy = 0;
+		cstPurchase.gridx = 50;
+		cstPurchase.insets = new Insets(10, 10, 10, 10);
+		contentPanel.add(titleLabelPurchase, cstPurchase);
 
 		// ==============================================================
 
@@ -76,13 +89,13 @@ public class OrdersTab {
 
 		// Affichage d'un tableau des commandes
 
-		String[] columnNamesOrders = { "Produit", "Fournisseur", "Quantité" };
+		String[] columnNamesOrders = { "ID commande", "Produit", "Fournisseur", "Quantité" };
 		DefaultTableModel tableModelOrders = new DefaultTableModel(columnNamesOrders, 0);
 
 		for (IData item : ordersList) {
 			if (item instanceof Commande commande) {
 				tableModelOrders
-						.addRow(new Object[] { commande.getIdProduit(), commande.getSiret(), commande.getQuantite() });
+						.addRow(new Object[] { commande.getIdCommande() , commande.getIdProduit(), commande.getSiret(), commande.getQuantite() });
 			}
 		}
 
@@ -90,7 +103,50 @@ public class OrdersTab {
 		JScrollPane scrollPaneOrders = new JScrollPane(ordersTable);
 		cstOrders.gridy = 1;
 		contentPanel.add(scrollPaneOrders, cstOrders);
+		
 
+		// ==============================================================
+		// ==============================================================
+		
+
+
+		String[] columnNamesPurchase = { "ID achat" , "ID commande", "Prix achat Unitaire", "Date achat"};
+		DefaultTableModel tableModelPurchase = new DefaultTableModel(columnNamesPurchase, 0);
+		// Création de la List dans laquelle seront stockées les achats
+
+		List<IData> purchasesList = new ArrayList<>(); 
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM achat")){
+				while(rs.next()) {
+					Achat a = new Achat(rs);
+					purchasesList.add(a);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// ==============================================================
+
+		// Affichage d'un tableau des achats
+
+		for (IData item : purchasesList) {
+			if (item instanceof Achat achat) {
+				tableModelPurchase
+						.addRow(new Object[] { achat.getIdAchat(), achat.getIdCommande(), achat.getPrixAchatUni(), achat.getDateAchat() });
+			}
+		}
+
+		JTable purchaseTable = new JTable(tableModelPurchase);
+		JScrollPane scrollPanePurchase = new JScrollPane(purchaseTable);
+		cstPurchase.gridy = 1;
+		contentPanel.add(scrollPanePurchase, cstPurchase);
+		
+
+		// ==============================================================
 		// ==============================================================
 
 		// Bouton pour passer une commande
@@ -159,32 +215,80 @@ public class OrdersTab {
 
 			try {
 				Commande selectedCommande = (Commande) ordersList.get(selectedRow);
-
-				// Test de création d'un objet achat manuellement
-				Achat achat = new Achat(selectedCommande.getIdProduit(), 20.0, new Date(System.currentTimeMillis()));
 				
-				Gestion.insert(achat, "achat"); // Ajout de la commande transformée en achat dans la table achat
-				
-				//commande acheté donc nouveau lot de produit 
-				LotProduit lp = new LotProduit(selectedCommande.getIdProduit(), 
-						20.0, 
-						selectedCommande.getQuantite(), 
-						new Date(System.currentTimeMillis()+99999999), 
-						0);
-				
-				//on recup l'id de l'achat passé pour le mettre dans le lot de produit 
+				// on vérifie si il y a un contrat pour valider cette commande , si oui on utrilise le plus avantageux
+				// récup du contrat
+				String query = "SELECT * FROM contrat WHERE id_produit = ? AND siret = ? AND CURRENT_DATE BETWEEN date_debut AND date_fin ORDER BY prix_uni LIMIT 1";
 
+				double achatPrice = -1;
 				
-				Gestion.insert(lp, "lot_produit"); // Ajout du lot de produit dans les stocks
-
-				// Supprimer de la List
-
-				//ordersList.remove(selectedCommande);
-				//tableModelOrders.removeRow(selectedRow);
+				try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+					statement.setInt(1, selectedCommande.getIdProduit());
+					statement.setString(2, selectedCommande.getSiret());
+					ResultSet rs = statement.executeQuery();
+					rs.next();
+					achatPrice = rs.getDouble("prix_uni");
+				}
 				
-				//Gestion.delete(selectedCommande, "commande"); // Supprimer la commande de la table commande
+				//si il n'y a pas de contrat a utilisé pour l'achat
+				if(achatPrice == -1) {
+					int confirm = JOptionPane.showConfirmDialog(frame, "Il n'y a pas de contrat avec ce fournisseur pour déterminer un prix d'achat. Faut-il le créer ?",
+							"Confirmation", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						JTextField prixField = new JTextField(15);
 
-				JOptionPane.showMessageDialog(frame, "Commande validée et transformée en achat !");
+						JPanel form = new JPanel(new GridLayout(4, 2));
+						form.add(new JLabel("Prix d'achat : "));
+						form.add(prixField);
+
+						int result = JOptionPane.showConfirmDialog(frame, form, "Définir le prix", JOptionPane.OK_CANCEL_OPTION);
+						if (result == JOptionPane.OK_OPTION) {
+							try {
+								Contrat c = new Contrat(selectedCommande.getSiret(), 
+										selectedCommande.getIdProduit(), 
+										Double.parseDouble(prixField.getText()),
+										System.currentTimeMillis(),
+										(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
+								Gestion.insert(c, "contrat");
+								achatPrice = Double.parseDouble(prixField.getText());
+								JOptionPane.showMessageDialog(frame, "Contrat créé avec succès !");
+							} catch (Exception ex) {
+								JOptionPane.showMessageDialog(frame, "Erreur lors de la création du contrat : " + ex.getMessage(),
+										"Erreur", JOptionPane.ERROR_MESSAGE);
+							}
+						}
+					}
+				}
+
+				if(achatPrice > 0) {
+					int confirm = JOptionPane.showConfirmDialog(frame, "Êtes-vous sûr de valider une commande en achat, ceci est irréversible ?",
+							"Confirmation", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						Achat achat = new Achat(selectedCommande.getIdCommande(), achatPrice, new Date(System.currentTimeMillis()));
+						
+						int achatId = Gestion.insert(achat, "achat"); // Ajout de la commande transformée en achat dans la table achat
+						
+						//commande acheté donc nouveau lot de produit avec comme prix de vente unitaire par défault le prix d'achat + 25%
+						LotProduit lp = new LotProduit(selectedCommande.getIdProduit(), 
+								achatPrice+((25/100)*achatPrice), 
+								selectedCommande.getQuantite(), 
+								new Date(System.currentTimeMillis()+ 365 * 24 * 60 * 60 * 1000), // péremption après 1 ans
+								achatId);
+						
+						Gestion.insert(lp, "lot_produit"); // Ajout du lot de produit dans les stocks
+		
+						// Supprimer de la List
+		
+						//ordersList.remove(selectedCommande);
+						//tableModelOrders.removeRow(selectedRow);
+						
+						//Gestion.delete(selectedCommande, "commande"); // Supprimer la commande de la table commande
+		
+						JOptionPane.showMessageDialog(frame, "Commande validée et achat créé !");
+					}
+				}else {
+					JOptionPane.showMessageDialog(frame, "Impossible de valider la commande car le contrat avec le fournisseur est fixé a 0 €, supprimez ce contrat pour continer !");
+				}
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(frame, "Erreur lors de la validation de la commande : " + ex.getMessage(),
 						"Erreur", JOptionPane.ERROR_MESSAGE);

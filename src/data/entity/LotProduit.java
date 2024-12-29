@@ -17,7 +17,7 @@ public class LotProduit implements IData{
 	private double quantite;
 	private Date peremption;
 	private int idAchat;
-	
+		
 	private String values;
 	private String valuesEq;
 	private HashMap<String, fieldType> map;
@@ -34,7 +34,7 @@ public class LotProduit implements IData{
 		map.put("id_achat", fieldType.INT4);
 		
 		values = "(id_produit, prix_vente_uni, quantite, peremption, id_achat) VALUES (?, ?, ?, ?, ?)"; 
-		values = "(id_lot_produit, id_produit, prix_vente_uni, quantite, peremption, id_achat) = (?, ?, ?, ?, ?, ?)";
+		valuesEq = "(id_lot_produit, id_produit, prix_vente_uni, quantite, peremption, id_achat) = (?, ?, ?, ?, ?, ?)";
 	}
 
 	@Override
@@ -119,6 +119,19 @@ public class LotProduit implements IData{
 
 	public LotProduit(int idProduit, double prixVenteUni, double quantite, Date peremption, int idAchat) {
 		super();
+		this.idProduit = idProduit;
+		this.prixVenteUni = prixVenteUni;
+		this.quantite = quantite;
+		this.peremption = peremption;
+		this.idAchat = idAchat;
+		createStruct();
+	}
+	
+	
+
+	public LotProduit(int idLotProduit, int idProduit, double prixVenteUni, double quantite, Date peremption, int idAchat) {
+		super();
+		this.idLotProduit = idLotProduit;
 		this.idProduit = idProduit;
 		this.prixVenteUni = prixVenteUni;
 		this.quantite = quantite;

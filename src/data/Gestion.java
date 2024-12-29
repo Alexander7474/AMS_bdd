@@ -156,7 +156,7 @@ public class Gestion {
 	 * @param data
 	 * @param table
 	 */
-	public static void insert(IData data, String table){
+	public static int insert(IData data, String table){
 		
 		//on récupère la map de filedType de la table
 		HashMap<String, fieldType> tableMap = null;
@@ -170,9 +170,12 @@ public class Gestion {
 		// si la table est bien celle qui stock la data
 		if(tableMap != null && data.check(tableMap)) {
 			String query = "INSERT INTO "+ table + " " + data.getValues();
-			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query);) {
+			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 				data.composeStatement(statement);
 				statement.executeUpdate();
+				ResultSet rs = statement.getGeneratedKeys();
+				rs.next();
+				return rs.getInt(1);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -186,6 +189,8 @@ public class Gestion {
 				System.out.println(str + ": " + data.getMap().get(str));
 			}
 		}
+		
+		return 0;
 	}
 	
 	public static void delete(IData data, String table) {
@@ -220,39 +225,8 @@ public class Gestion {
 		}
 	}
 	
-	public static void update(IData oldOne, IData newOne, String table) {
-		//on récupère la map de filedType de la table
-		HashMap<String, fieldType> tableMap = null;
-		try {
-			tableMap = structTable(table, false);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		// si la table est bien celle qui stock la data
-		if(tableMap != null && oldOne.check(tableMap) && newOne.check(tableMap)) {
-			String query = "UPDATE "+ table + " SET " + newOne.getValuesEq() + " WHERE " + oldOne.getValuesEq();
-			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query);) {
-				newOne.composeStatementEq(statement);
-				statement.executeUpdate();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else {
-			System.err.println("Erreur lors de la suppression " + table + ", la map de la table ne correspond pas !");
-			for(String str : tableMap.keySet()) {
-				System.out.println(str + ": " + tableMap.get(str));
-			}
-			for(String str : oldOne.getMap().keySet()) {
-				System.out.println(str + ": " + oldOne.getMap().get(str));
-			}
-
-			for(String str : newOne.getMap().keySet()) {
-				System.out.println(str + ": " + newOne.getMap().get(str));
-			}
-		}
+	public static void update(IData n, IData newOne, String table) {
+		//todo
 	}
 	
 }

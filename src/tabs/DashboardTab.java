@@ -22,8 +22,8 @@ import javax.swing.table.DefaultTableModel;
 
 import data.Connexion;
 import data.IData;
-import data.entity.Fournisseur;
 import data.entity.LotProduit;
+
 
 public class DashboardTab {
 

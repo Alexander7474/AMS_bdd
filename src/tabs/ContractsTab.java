@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +22,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import data.Connexion;
 import data.Gestion;
 import data.IData;
+import data.entity.Commande;
 import data.entity.Contrat;
 
 public class ContractsTab {
@@ -52,9 +57,19 @@ public class ContractsTab {
 
 		List<IData> contractsList = new ArrayList<>();
 
-		// Test de simulation
-		contractsList.add(new Contrat("14523652895412", 1, 5.23, "2024-12-12", "2024-12-16")); // >SQL
-		contractsList.add(new Contrat("0123456789", 1, 5.23, "2024-12-12", "2024-12-28")); // >SQL
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM contrat")){
+				while(rs.next()) {
+					Contrat c = new Contrat(rs);
+					contractsList.add(c);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// ==============================================================
 

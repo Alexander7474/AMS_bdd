@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +22,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import data.Connexion;
 import data.Gestion;
 import data.IData;
+import data.entity.Commande;
 import data.entity.Vente;
 
 public class SalesTab {
@@ -51,7 +56,19 @@ public class SalesTab {
 		// Création de la List dans laquelle seront stockées les ventes (exemple)
 
 		List<IData> salesList = new ArrayList<>();
-		salesList.add(new Vente(1, "2024-12-28", 100.0, 2)); // <</SQL
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM vente")){
+				while(rs.next()) {
+					Vente v = new Vente(rs);
+					salesList.add(v);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// ==============================================================
 

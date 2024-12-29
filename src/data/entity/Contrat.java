@@ -35,7 +35,7 @@ public class Contrat implements IData{
 		
 		values = "(siret, id_produit, prix_uni, date_debut, date_fin) VALUES (?, ?, ?, ?, ?)"; 
 
-		valuesEq = "(id_contrat, siret, id_produit, prix_uni, date_debut, date_fin) VALUES (?, ?, ?, ?, ?, ?)"; 
+		valuesEq = "(id_contrat, siret, id_produit, prix_uni, date_debut, date_fin) = (?, ?, ?, ?, ?, ?)"; 
 	}
 
 	@Override
@@ -134,6 +134,25 @@ public class Contrat implements IData{
 		this.prixUni = prixUni;
 		this.dateDebut = Date.valueOf(dateDebut);
 		this.dateFin = Date.valueOf(dateFin);
+		createStruct();
+	}
+	
+	/**
+	 * @brief A utiliser pour ajouter un contrat à la base
+	 * 
+	 * @param siret
+	 * @param idProduit
+	 * @param prixUni
+	 * @param dateDebut
+	 * @param dateFin
+	 */
+	public Contrat(String siret, int idProduit, double prixUni, long dateDebut, long dateFin) {
+		super();
+		this.siret = siret;
+		this.idProduit = idProduit;
+		this.prixUni = prixUni;
+		this.dateDebut = new Date(dateDebut);
+		this.dateFin = new Date(dateFin);
 		createStruct();
 	}
 
