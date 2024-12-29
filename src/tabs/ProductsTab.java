@@ -212,20 +212,15 @@ public class ProductsTab {
 				return;
 			}
 
-			// Récupération des données du Fournisseur
-			String siret = tableData.get(selectedRow).get(0);
-			String nom = tableData.get(selectedRow).get(1);
-			String adresse = tableData.get(selectedRow).get(2);
-			String telephone = tableData.get(selectedRow).get(3);
-			String email = tableData.get(selectedRow).get(4);
-
 			// Création du Fournisseur à supprimer
-			Fournisseur supplierToDelete = new Fournisseur(siret, nom, adresse, telephone, email);
+			Fournisseur supplierToDelete = (Fournisseur) data.get(selectedRow);
 
 			int confirm = JOptionPane.showConfirmDialog(frame, "Êtes-vous sûr de vouloir supprimer ce Fournisseur ?",
 					"Confirmation", JOptionPane.YES_NO_OPTION);
 			if (confirm == JOptionPane.YES_OPTION) {
 				try {
+					data.remove(supplierToDelete);
+					
 					Gestion.delete(supplierToDelete, "fournisseur");
 					JOptionPane.showMessageDialog(frame, "Fournisseur supprimé avec succès !");
 				} catch (Exception ex) {

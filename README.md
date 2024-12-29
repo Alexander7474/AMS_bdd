@@ -1,24 +1,17 @@
 # AMS_bdd
-Projet AMS java et modélisation de base de données 
+Projet AMS java et modélisation de base de données Alexandre LANTERNIER et Florent CAGNARD
 
 # Setup 
 
-Impossible de se connecter sur etd avec ssh donc on va utiliser notre propre server postegrsql et faudra tester à la fin sur pedago
+Impossible de se connecter sur etd avec ssh et pedago, on a donc utilisez notre propre server postegrsql.     
+Nous avons utilisez swing pour créer l'interface graphique
 
-### Installation postgresql
+# Info
 
-Installation   
-``` sudo apt-get install postgresql-client postgresql ```   
-Connection sur l'utilisateur postgre   
-``` sudo -i -u postgre ```   
-Connection à la base   
-``` psql ```   
-Creation d'un superutilisateur   
-``` CREATE USER yourusername WITH PASSWORD password ```   
-``` ALTER USER yourusername WITH SUPERUSER ```   
-Creation d'un role pour utiliser psql depuis son compte linux local   
-``` CREATE ROLE yourlocalusername WITH LOGIN ```   
-``` ALTER ROLE yourlocaluserrname WITH SUPERUSER ```   
+-> Les permissions utilisateur n'on pas pus être implémentées     
+-> Certain menu ne se rafraîchisse pas lors de modification, il faut donc cliquer à nouveau sur le menu pour les voires apparaître     
+-> Le script creation_table.sql contient des données pour tester le logiciel en plus de la structure de la base de données       
+-> 
 
 # Status
 

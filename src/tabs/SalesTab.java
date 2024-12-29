@@ -155,75 +155,6 @@ public class SalesTab {
 
 		// ==============================================================
 
-		// Bouton pour modifier une vente
-		JButton modifySaleButton = new JButton("Modifier une vente");
-		modifySaleButton.setForeground(grisDoux);
-		modifySaleButton.setBackground(jauneDoux);
-		cstSales.gridy = 3;
-		contentPanel.add(modifySaleButton, cstSales);
-
-		// Action au clique sur ce bouton
-		modifySaleButton.addActionListener(modifySaleEvent -> {
-			int selectedRow = salesTable.getSelectedRow();
-			if (selectedRow == -1) {
-				JOptionPane.showMessageDialog(frame, "Veuillez sélectionner une vente à modifier.", "Erreur",
-						JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-
-			try {
-				Vente selectedVente = (Vente) salesList.get(selectedRow);
-
-				JTextField produitField = new JTextField(String.valueOf(selectedVente.getIdLotProduit()));
-				JTextField dateField = new JTextField(String.valueOf(selectedVente.getDate()));
-				JTextField priceField = new JTextField(String.valueOf(selectedVente.getPrixVenteUni()));
-				JTextField quantityField = new JTextField(String.valueOf(selectedVente.getQuantite()));
-
-				JPanel saleForm = new JPanel(new GridLayout(4, 2));
-				saleForm.add(new JLabel("Produit (ID) :"));
-				saleForm.add(produitField);
-				saleForm.add(new JLabel("Date (AAAA-MM-JJ) :"));
-				saleForm.add(dateField);
-				saleForm.add(new JLabel("Prix unitaire :"));
-				saleForm.add(priceField);
-				saleForm.add(new JLabel("Quantité :"));
-				saleForm.add(quantityField);
-
-				int result = JOptionPane.showConfirmDialog(frame, saleForm, "Modifier une vente",
-						JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION) {
-
-					// Mise à jour de l'objet selectedVente
-					selectedVente.setDate(dateField.getText());
-					selectedVente.setPrixVenteUni(Double.parseDouble(priceField.getText()));
-					selectedVente.setQuantite(Integer.parseInt(quantityField.getText())); // Ajout de la mise à jour de
-																							// la quantité
-
-					// Création de l'objet Vente mis à jour
-					Vente updatedVente = new Vente(selectedVente.getIdLotProduit(),
-							String.valueOf(selectedVente.getDate()), selectedVente.getPrixVenteUni(),
-							selectedVente.getQuantite());
-
-					// Mise à jour dans la base de données
-					Gestion.update(selectedVente, updatedVente, "vente");
-
-					// Mise à jour dans le tableau
-					tableModelSales.setValueAt(selectedVente.getDate(), selectedRow, 1);
-					tableModelSales.setValueAt(selectedVente.getPrixVenteUni(), selectedRow, 2);
-					tableModelSales.setValueAt(selectedVente.getQuantite(), selectedRow, 3);
-					tableModelSales.setValueAt(selectedVente.getPrixVenteUni() * selectedVente.getQuantite(),
-							selectedRow, 4);
-
-					JOptionPane.showMessageDialog(frame, "Vente modifiée avec succès !");
-				}
-			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(frame, "Erreur lors de la modification de la vente : " + ex.getMessage(),
-						"Erreur", JOptionPane.ERROR_MESSAGE);
-			}
-		});
-
-		// ==============================================================
-
 		// Bouton pour supprimer une vente
 		JButton deleteSaleButton = new JButton("Supprimer une vente");
 		deleteSaleButton.setForeground(grisDoux);
@@ -250,6 +181,11 @@ public class SalesTab {
 				if (confirmDelete == JOptionPane.YES_OPTION) {
 					salesList.remove(selectedVente);
 					tableModelSales.removeRow(selectedRow);
+					
+					String query2 = "UPDATE lot_produit SET quantite = quantite + " + selectedVente.getQuantite() + " WHERE id_lot_produit = " + selectedVente.getIdLotProduit();
+					try(PreparedStatement statement2 = Connexion.getConnexion().prepareStatement(query2)){
+						statement2.executeUpdate();
+					}
 
 					Gestion.delete(selectedVente, "vente");
 

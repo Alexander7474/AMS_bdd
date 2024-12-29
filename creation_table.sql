@@ -107,18 +107,40 @@ CREATE TABLE vente (
 );
 
 INSERT INTO user_group(nom) VALUES ('admin');
+
 INSERT INTO utilisateur(id_group, username, password) VALUES (1, 'admin', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918');
 
 INSERT INTO fournisseur VALUES ('11111111111111','the fournisseur','somewhere','0606060606','theemail@email.fr');
+INSERT INTO fournisseur VALUES ('22222222222222','logistic','lyon','0606060606','uuuuuuuu@email.fr');
+INSERT INTO fournisseur VALUES ('33333333333333','other one','somewhere else','0606060606','ooooooooo@email.fr');
+
 INSERT INTO produit(nom,description,categorie) VALUES ('pomme','fucking apple','fruit');
 INSERT INTO produit(nom,description,categorie) VALUES ('bannane','bannanananananana','fruit');
-INSERT INTO commande(id_produit,siret,quantite) VALUES (1,'11111111111111',5);
-INSERT INTO achat(id_commande,prix_achat_uni,date_achat) VALUES (1,2.5,'20-12-2022');
-INSERT INTO lot_produit(id_produit, prix_vente_uni, quantite, peremption, id_achat) VALUES (1,3.5,5,'20-12-2025',1);
-INSERT INTO vente(id_lot_produit, date_vente, prix_vente_uni, quantite) VALUES(1,'25-12-2023',3.5,2);
-INSERT INTO contrat(siret, id_produit, prix_uni, date_debut, date_fin) VALUES ('11111111111111', 1, 2.5, '22-10-2000', '22-10-2100');
-INSERT INTO contrat(siret, id_produit, prix_uni, date_debut, date_fin) VALUES ('11111111111111', 1, 5.5, '22-10-1989', '22-10-2001');
+INSERT INTO produit(nom,description,categorie) VALUES ('soda','1L of soda','drink');
+INSERT INTO produit(nom,description,categorie) VALUES ('steak','300g de steak','meat');
+
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (1,'11111111111111',8.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (2,'33333333333333',8.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (3,'11111111111111',8.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (2,'22222222222222',8.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (4,'22222222222222',8.0);
+
+INSERT INTO commande(id_produit,siret,quantite) VALUES (1,'11111111111111',89.0);
+INSERT INTO commande(id_produit,siret,quantite) VALUES (3,'11111111111111',200.0);
+INSERT INTO commande(id_produit,siret,quantite) VALUES (2,'22222222222222',65.8);
+INSERT INTO commande(id_produit,siret,quantite) VALUES (3,'22222222222222',154.3);
+INSERT INTO commande(id_produit,siret,quantite) VALUES (4,'33333333333333',150.0);
+
+INSERT INTO contrat(siret, id_produit, prix_uni, date_debut, date_fin) VALUES ('11111111111111', 1, 0.8, '22-10-2000', '22-10-2100');
+INSERT INTO contrat(siret, id_produit, prix_uni, date_debut, date_fin) VALUES ('33333333333333', 4, 5.4, '22-10-1989', '22-10-2001');
+
 INSERT INTO contact(nom, prenom, numero_tel, email) VALUES('jack','jean','0505050505','jack@jean.com');
+INSERT INTO contact(nom, prenom, numero_tel, email) VALUES('jhon','doe','0505050505','jhon@doe.com');
+INSERT INTO contact(nom, prenom, numero_tel, email) VALUES('alice','jean','0505050505','alice@jean.com');
+INSERT INTO contact(nom, prenom, numero_tel, email) VALUES('bob','jean','0505050505','bob@jean.com');
+
 INSERT INTO contact_fournisseur(siret, id_contact) VALUES('11111111111111',1);
+INSERT INTO contact_fournisseur(siret, id_contact) VALUES('11111111111111',3);
+INSERT INTO contact_fournisseur(siret, id_contact) VALUES('22222222222222',1);
  
  

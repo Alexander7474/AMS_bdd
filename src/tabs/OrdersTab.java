@@ -226,8 +226,9 @@ public class OrdersTab {
 					statement.setInt(1, selectedCommande.getIdProduit());
 					statement.setString(2, selectedCommande.getSiret());
 					ResultSet rs = statement.executeQuery();
-					rs.next();
-					achatPrice = rs.getDouble("prix_uni");
+					if(rs.next()) {
+						achatPrice = rs.getDouble("prix_uni");
+					}
 				}
 				
 				//si il n'y a pas de contrat a utilisé pour l'achat
@@ -244,14 +245,33 @@ public class OrdersTab {
 						int result = JOptionPane.showConfirmDialog(frame, form, "Définir le prix", JOptionPane.OK_CANCEL_OPTION);
 						if (result == JOptionPane.OK_OPTION) {
 							try {
+								//contart de 24h
 								Contrat c = new Contrat(selectedCommande.getSiret(), 
 										selectedCommande.getIdProduit(), 
 										Double.parseDouble(prixField.getText()),
 										System.currentTimeMillis(),
 										(System.currentTimeMillis() + 24 * 60 * 60 * 1000));
-								Gestion.insert(c, "contrat");
-								achatPrice = Double.parseDouble(prixField.getText());
-								JOptionPane.showMessageDialog(frame, "Contrat créé avec succès !");
+								
+								//vérif si le fournisseur a le produit
+								query = "SELECT * FROM produit_fournisseur WHERE id_produit = ? AND siret = ?";
+								boolean canMakeContrat = false;
+								
+								try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+									statement.setInt(1, c.getIdProduit());
+									statement.setString(2, c.getSiret());
+									ResultSet rs = statement.executeQuery();
+									if(rs.next()) {
+										canMakeContrat = true;
+									}
+								}
+								
+								if(canMakeContrat) {
+									Gestion.insert(c, "contrat");
+									achatPrice = Double.parseDouble(prixField.getText());
+									JOptionPane.showMessageDialog(frame, "Contrat créé avec succès !");
+								}else {
+									JOptionPane.showMessageDialog(frame, "Impossible de créer le contrat, le fournisseur n'a pas le produit voulue !");
+								}
 							} catch (Exception ex) {
 								JOptionPane.showMessageDialog(frame, "Erreur lors de la création du contrat : " + ex.getMessage(),
 										"Erreur", JOptionPane.ERROR_MESSAGE);
@@ -270,7 +290,7 @@ public class OrdersTab {
 						
 						//commande acheté donc nouveau lot de produit avec comme prix de vente unitaire par défault le prix d'achat + 25%
 						LotProduit lp = new LotProduit(selectedCommande.getIdProduit(), 
-								achatPrice+((25/100)*achatPrice), 
+								(achatPrice+(0.25*achatPrice)), 
 								selectedCommande.getQuantite(), 
 								new Date(System.currentTimeMillis()+ 365 * 24 * 60 * 60 * 1000), // péremption après 1 ans
 								achatId);

@@ -1,22 +1,66 @@
 package swing_gui;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
-import tabs.*;
-
+import data.Connexion;
 import data.Gestion;
 import data.IData;
-import data.entity.Achat;
-import data.entity.Commande;
+import data.entity.LotProduit;
+import data.entity.Vente;
+import tabs.*;
+
 import java.awt.*;
-import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class ManagementSoftware {
 
 	public static void loadMainApplication(String username) {
+		
+		//On vérifie tous les lots possiblement périmé pour en faire des ventes à 0€
+
+		List<IData> invList = new ArrayList<>();
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM lot_produit WHERE peremption < CURRENT_DATE")){
+				while(rs.next()) {
+					LotProduit lp = new LotProduit(rs);
+					invList.add(lp);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(IData item : invList) {
+			if(item instanceof LotProduit lot) {
+				//déclarer une vente des produits restant à 0€
+				Vente updatedVente = new Vente(lot.getIdLotProduit(),
+						String.valueOf(LocalDate.now()), 0,
+						lot.getQuantite());
+				Gestion.insert(updatedVente, "vente");
+				
+				// Mise à jour dans la base de données pour changé la quantité du lot de produit
+				lot.setQuantite(0);
+				String query = "UPDATE lot_produit SET " + lot.getValuesEq() + " WHERE id_lot_produit = " + lot.getIdLotProduit();
+				try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+					lot.composeStatementEq(statement);
+					statement.executeUpdate();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					System.err.println("Impossible de mettre a jour les lots de produit : ");
+					e1.printStackTrace();
+				}
+			}
+		}
 
 		// ==============================================================
 
@@ -28,8 +72,8 @@ public class ManagementSoftware {
 
 		// Création de la barre latérale
 		JPanel sidebar = new JPanel();
-		sidebar.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
-		sidebar.setPreferredSize(new Dimension(300, 0));
+		sidebar.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 15));
+		sidebar.setPreferredSize(new Dimension(200, 0));
 		sidebar.setBackground(new Color(168, 213, 186)); // Vert menthe
 
 		// ==============================================================
@@ -37,7 +81,6 @@ public class ManagementSoftware {
 		// Affichage de l'utilisateur connecté
 		JLabel userLabel = new JLabel("Utilisateur : " + username);
 		userLabel.setFont(new Font("Arial", Font.BOLD, 20));
-		userLabel.setForeground(new Color(74, 144, 226)); // Bleu moyen
 		sidebar.add(userLabel);
 
 		// ==============================================================
@@ -45,14 +88,12 @@ public class ManagementSoftware {
 		// Affichage du rôle de l'utilisateur connecté
 		JLabel roleLabel = new JLabel("Rôle : " + UserManager.getUserRole(username));
 		roleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-		roleLabel.setForeground(new Color(194, 149, 69)); // Beige doré saturé
 		sidebar.add(roleLabel);
-		sidebar.add(Box.createVerticalStrut(50));
 
 		// ==============================================================
 
 		// Bouton pour accéder à la gestion des fournisseurs
-		JButton inv = new JButton("Inventaire");
+		JButton inv = new JButton("Inventaire/Lots");
 		inv.setBackground(new Color(255, 183, 77));
 		sidebar.add(inv);
 		sidebar.add(Box.createVerticalStrut(15));
@@ -60,18 +101,16 @@ public class ManagementSoftware {
 		// ==============================================================
 
 		// Bouton pour accéder à la gestion des fournisseurs
-		JButton suppliers = new JButton("Fournisseurs");
+		JButton suppliers = new JButton("Fournisseurs/Contacts");
 		suppliers.setBackground(new Color(255, 183, 77));
 		sidebar.add(suppliers);
-		sidebar.add(Box.createVerticalStrut(15));
 
 		// ==============================================================
 
 		// Bouton pour accéder à la gestion des produits
-		JButton products = new JButton("Produits");
+		JButton products = new JButton("Fournisseurs/Produits");
 		products.setBackground(new Color(255, 183, 77));
 		sidebar.add(products);
-		sidebar.add(Box.createVerticalStrut(15));
 
 		// ==============================================================
 
@@ -79,7 +118,6 @@ public class ManagementSoftware {
 		JButton sales = new JButton("Ventes");
 		sales.setBackground(new Color(255, 183, 77));
 		sidebar.add(sales);
-		sidebar.add(Box.createVerticalStrut(15));
 
 		// ==============================================================
 
@@ -87,7 +125,6 @@ public class ManagementSoftware {
 		JButton contracts = new JButton("Contrats");
 		contracts.setBackground(new Color(255, 183, 77));
 		sidebar.add(contracts);
-		sidebar.add(Box.createVerticalStrut(15));
 
 		// ==============================================================
 
@@ -95,23 +132,27 @@ public class ManagementSoftware {
 		JButton orders = new JButton("Commandes/Achats");
 		orders.setBackground(new Color(255, 183, 77));
 		sidebar.add(orders);
-		sidebar.add(Box.createVerticalStrut(15));
 
+		// ==============================================================
+
+		// Bouton pour accéder aux paramètres de l'application
+		JButton stats = new JButton("Statistiques");
+		stats.setBackground(new Color(255, 183, 77));
+		sidebar.add(stats);
+				
 		// ==============================================================
 
 		// Bouton pour accéder aux paramètres de l'application
 		JButton parameters = new JButton("Paramètres");
 		parameters.setBackground(new Color(255, 183, 77));
 		sidebar.add(parameters);
-		sidebar.add(Box.createVerticalStrut(15));
-
+		
 		// ==============================================================
 
 		// Bouton pour se déconnecter
 		JButton logout = new JButton("Déconnexion");
 		logout.setBackground(new Color(102, 187, 106)); // Vert foncé
 		sidebar.add(logout);
-		sidebar.add(Box.createVerticalStrut(15));
 
 		logout.addActionListener(e -> {
 			frame.dispose();
@@ -192,6 +233,17 @@ public class ManagementSoftware {
 			contentPanel.removeAll();
 
 			OrdersTab.loadOrdersTab(contentPanel, frame);
+			
+		});
+		// ==============================================================
+
+		// Quand on clique sur l'onglet des stast
+
+		stats.addActionListener(e -> {
+
+			contentPanel.removeAll(); // Supprime tous les composants = page vide
+
+			StatsTab.loadStatsTab(contentPanel, frame);
 			
 		});
 		

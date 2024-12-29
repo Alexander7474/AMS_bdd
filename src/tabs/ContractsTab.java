@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -127,14 +128,30 @@ public class ContractsTab {
 
 					Contrat newContrat = new Contrat(siretField.getText(), Integer.parseInt(produitField.getText()),
 							Double.parseDouble(prixField.getText()), dateDebutField.getText(), dateFinField.getText());
+					
+					String query = "SELECT * FROM produit_fournisseur WHERE id_produit = ? AND siret = ?";
+					boolean canMakeContrat = false;
+					
+					try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+						statement.setInt(1, newContrat.getIdProduit());
+						statement.setString(2, newContrat.getSiret());
+						ResultSet rs = statement.executeQuery();
+						if(rs.next()) {
+							canMakeContrat = true;
+						}
+					}
 
-					contractsList.add(newContrat);
-					tableModelContracts.addRow(
-							new Object[] { newContrat.getIdContrat(), newContrat.getSiret(), newContrat.getIdProduit(),
-									newContrat.getPrixUni(), newContrat.getDateDebut(), newContrat.getDateFin() });
-
-					Gestion.insert(newContrat, "contrat");
-					JOptionPane.showMessageDialog(frame, "Contrat ajouté avec succès !");
+					if(canMakeContrat) {
+						contractsList.add(newContrat);
+						tableModelContracts.addRow(
+								new Object[] { newContrat.getIdContrat(), newContrat.getSiret(), newContrat.getIdProduit(),
+										newContrat.getPrixUni(), newContrat.getDateDebut(), newContrat.getDateFin() });
+	
+						Gestion.insert(newContrat, "contrat");
+						JOptionPane.showMessageDialog(frame, "Contrat ajouté avec succès !");
+					}else {
+						JOptionPane.showMessageDialog(frame, "Impossible de créer le contrat, le fournisseur n'a pas le produit voulue !");
+					}
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur lors de l'ajout du contrat : " + ex.getMessage(),
 							"Erreur", JOptionPane.ERROR_MESSAGE);
