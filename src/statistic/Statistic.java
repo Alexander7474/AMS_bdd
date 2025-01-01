@@ -76,7 +76,7 @@ public class Statistic {
 	
 	/**
 	 * @author Alexandre LANTERNIER
-	 * @brief renvoie les produits bestsellers (dans la limit de cnt)
+	 * @brief renvoie les produits bestsellers qui font le plus de CA (dans la limit de cnt)
 	 * 
 	 * @param cnt
 	 * @return
@@ -176,8 +176,6 @@ public class Statistic {
 		double benefit = 0;
 		
 		String query = " SELECT SUM(v.prix_vente_uni * v.quantite) AS ca FROM vente v \n"
-				+ " JOIN lot_produit lp ON lp.id_lot_produit = v.id_lot_produit \n"
-				+ " JOIN achat a ON a.id_achat = lp.id_achat \n"
 				+ " WHERE v.date_vente = ?";
 		
 		try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
@@ -192,5 +190,26 @@ public class Statistic {
 		}
 		
 		return benefit;
+	}
+	
+	public static double getJournalyPerte(Date date) {
+		double perte = 0;
+		
+		String query = "SELECT v.quantite,lp.prix_vente_uni "
+				+ "FROM vente v JOIN lot_produit lp ON lp.id_lot_produit = v.id_lot_produit "
+				+ "WHERE v.prix_vente_uni = 0 AND date_vente = ?";
+		
+		try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+			statement.setDate(1, date);
+			try(ResultSet rs = statement.executeQuery()){
+				while(rs.next()) {
+					perte += rs.getDouble("quantite") * rs.getDouble("prix_vente_uni");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return perte;
 	}
 }

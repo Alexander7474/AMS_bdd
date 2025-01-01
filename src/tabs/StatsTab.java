@@ -147,7 +147,7 @@ public class StatsTab {
 		contentPanel.add(titleLabel4, cst4);
 		
 		// Obtenir la date d'aujourd'hui
-        LocalDate aujourdHui2 = LocalDate.now();
+        LocalDate aujourdHui4 = LocalDate.now();
 
 		// Affichage du tableau des ventes
 		String[] columnNames4 = { "Date", "CA (€)" };
@@ -156,7 +156,7 @@ public class StatsTab {
 		// Boucle sur les 30 derniers jours
         for (int i = 0; i < 30; i++) {
             // Calculer la date - 1 jour
-            LocalDate date = aujourdHui2.minusDays(i);
+            LocalDate date = aujourdHui4.minusDays(i);
             tableModel4.addRow(new Object[] { Date.valueOf(date), Statistic.getJournalyCA(Date.valueOf(date)) + "€" });
         }
 
@@ -165,6 +165,39 @@ public class StatsTab {
 		cst4.gridy = 3;
 		cst4.gridx = 2;
 		contentPanel.add(scrollPane4, cst4);
+
+		// ==============================================================
+		// ==============================================================
+		
+		// panel 5 -> perte journaliere
+
+		JLabel titleLabel5 = new JLabel("Valeur perdue des 30 derniers jours", SwingConstants.CENTER);
+		titleLabel5.setFont(new Font("Arial", Font.BOLD, 20));
+		GridBagConstraints cst5 = new GridBagConstraints();
+		cst5.gridy = 2;
+		cst5.gridx = 0;
+		cst5.insets = new Insets(10, 10, 10, 10);
+		contentPanel.add(titleLabel5, cst5);
+		
+		// Obtenir la date d'aujourd'hui
+        LocalDate aujourdHui5= LocalDate.now();
+
+		// Affichage du tableau des ventes
+		String[] columnNames5 = { "Date", "Pertes (€)" };
+		DefaultTableModel tableModel5 = new DefaultTableModel(columnNames4, 0);
+
+		// Boucle sur les 30 derniers jours
+        for (int i = 0; i < 30; i++) {
+            // Calculer la date - 1 jour
+            LocalDate date = aujourdHui5.minusDays(i);
+            tableModel5.addRow(new Object[] { Date.valueOf(date), Statistic.getJournalyPerte(Date.valueOf(date)) + "€" });
+        }
+
+		JTable table5 = new JTable(tableModel5);
+		JScrollPane scrollPane5= new JScrollPane(table5);
+		cst5.gridy = 3;
+		cst5.gridx = 0;
+		contentPanel.add(scrollPane5, cst5);
 
 		// ==============================================================
 
