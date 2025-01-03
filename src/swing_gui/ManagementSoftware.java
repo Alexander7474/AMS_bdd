@@ -23,7 +23,7 @@ public class ManagementSoftware {
 	
 	private static JPanel sidebar;
 	private static JFrame frame;
-	private static Theme theme = Theme.LIGHT;
+	private static Theme theme = Theme.LIGHT; // pas encore implémenté
 
 	public static void loadMainApplication(String username) {
 		
@@ -189,7 +189,7 @@ public class ManagementSoftware {
 		frame.add(sidebar, BorderLayout.WEST);
 		frame.add(contentPanel, BorderLayout.CENTER);
 
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiser la fenêtre pour qu'elle occupe tout l'écran
+		frame.setExtendedState(JFrame.NORMAL); // Maximiser la fenêtre pour qu'elle occupe tout l'écran
 		frame.setVisible(true); // Rendre la fenêtre visible
 
 	};

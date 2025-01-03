@@ -161,6 +161,10 @@ public class Contrat implements IData{
 		createStruct();
 	}
 
+	public Contrat() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getSiret() {
 		return siret;
 	}

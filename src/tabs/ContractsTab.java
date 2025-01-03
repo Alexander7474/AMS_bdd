@@ -1,6 +1,8 @@
 package tabs;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridLayout;
@@ -11,6 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,12 +25,16 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
 import data.Connexion;
 import data.Gestion;
 import data.IData;
 import data.entity.Commande;
 import data.entity.Contrat;
+import swing_gui.Palette;
 
 public class ContractsTab {
 
@@ -56,21 +63,7 @@ public class ContractsTab {
 
 		// Création de la List dans laquelle seront stockés les contrats
 
-		List<IData> contractsList = new ArrayList<>();
-
-		// recup des info dans la base
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try(ResultSet rs = statement.executeQuery("SELECT * FROM contrat")){
-				while(rs.next()) {
-					Contrat c = new Contrat(rs);
-					contractsList.add(c);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Vector<IData> contractsList = Gestion.getAllFromTable("contrat", new Contrat());
 
 		// ==============================================================
 
@@ -88,7 +81,72 @@ public class ContractsTab {
 		}
 
 		JTable contractsTable = new JTable(tableModelContracts);
+		
+        // Personnaliser l'en-tête de la table
+        JTableHeader header = contractsTable.getTableHeader();
+        header.setBackground(Palette.BUTTON_ACTIVE); // Couleur de fond de l'en-tête
+        header.setForeground(Palette.TEXT_LIGHT); // Couleur du texte de l'en-tête
+        header.setFont(new Font("Arial", Font.BOLD, 14)); // Police de l'en-tête
+        
+		contractsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		contractsTable.setBackground(new Color(230, 230, 250)); // Couleur de fond de la table (lavande)
+		contractsTable.setForeground(Color.BLACK); // Couleur du texte
+		contractsTable.setGridColor(Color.GRAY); // Couleur des bordures entre les cellules
+		contractsTable.setSelectionBackground(new Color(100, 149, 237)); // Couleur de sélection (bleu clair)
+		contractsTable.setSelectionForeground(Color.WHITE); // Couleur du texte lors de la sélection
+		
+		// Personnaliser la hauteur des lignes
+		contractsTable.setRowHeight(30); // Hauteur de ligne plus grande
+	
+		//détermine la taille de la table
+		int columnCnt = contractsTable.getColumnCount();
+		int prefSizeX = 1000/columnCnt;
+		
+		for (int column = 0; column < columnCnt; column++) {
+			contractsTable.getColumnModel().getColumn(column).setPreferredWidth(prefSizeX);
+        }
+		
+		contractsTable.setPreferredScrollableViewportSize(new Dimension(prefSizeX * columnCnt, 300));
+
+        // Personnaliser le rendu des cellules
+		contractsTable.setDefaultRenderer(Object.class, new TableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus,
+                                                           int row, int column) {
+                // Créer un composant de cellule
+                JLabel label = new JLabel(value.toString());
+
+                // Appliquer un style spécifique pour les cellules
+                if (isSelected) {
+                    label.setBackground(Palette.BUTTON_ACTIVE); // Fond bleu clair pour les cellules sélectionnées
+                    label.setForeground(Palette.TEXT_LIGHT); // Texte blanc pour les cellules sélectionnées
+                } else {
+                    // Personnaliser la couleur de fond selon la ligne
+                    if (row % 2 == 0) {
+                        label.setBackground(Palette.BACKGROUND_LIGHT_DARK); // Fond bleu clair pour les lignes paires
+                    } else {
+                        label.setBackground(Palette.BACKGROUND_LIGHT); // Fond blanc pour les lignes impaires
+                    }
+                    label.setForeground(Palette.TEXT_DARK); // Texte noir
+                }
+
+                // Rendre la cellule opaque
+                label.setOpaque(true);
+                label.setHorizontalAlignment(SwingConstants.CENTER); // Centrer le texte
+
+                return label;
+            }
+        });
+
 		JScrollPane scrollPaneContracts = new JScrollPane(contractsTable);
+		scrollPaneContracts.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPaneContracts.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		
+		contractsTable.revalidate();
+		contractsTable.repaint();
+		
 		cstContracts.gridy = 1;
 		contentPanel.add(scrollPaneContracts, cstContracts);
 
