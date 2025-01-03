@@ -119,6 +119,11 @@ public class Contact implements IData{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new Contact(rs);
+	}
 
 	public String getNom() {
 		return nom;

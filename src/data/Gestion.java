@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Vector;
 
+import data.entity.Contrat;
+
 /**
  * @author Alexandre LANTERNIER
  */
@@ -302,4 +304,28 @@ public class Gestion {
 		}
 	}
 	
+	/**
+	 * @param table
+	 * @param data Objet 
+	 * @return
+	 */
+	public static Vector<IData> getAllFromTable(String table, IData data){
+		Vector<IData> vec = new Vector<IData>();
+		
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM " + table)){
+				while(rs.next()) {
+					IData d = data.build(rs); // on build avec l'instance en paramètre pour utiliser le bon constructeur
+					vec.add(d);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return vec;
+	}
 }

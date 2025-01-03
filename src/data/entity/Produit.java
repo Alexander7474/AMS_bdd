@@ -62,6 +62,11 @@ public class Produit implements IData{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new Produit(rs);
+	}
 
 	public int getIdProduit() {
 		return idProduit;

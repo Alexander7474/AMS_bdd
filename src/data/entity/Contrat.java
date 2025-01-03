@@ -117,6 +117,11 @@ public class Contrat implements IData{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new Contrat(rs);
+	}
 
 	/**
 	 * @brief A utiliser pour ajouter un contrat à la base

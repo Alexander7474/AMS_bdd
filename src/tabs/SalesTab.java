@@ -7,10 +7,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -26,7 +23,6 @@ import javax.swing.table.DefaultTableModel;
 import data.Connexion;
 import data.Gestion;
 import data.IData;
-import data.entity.Commande;
 import data.entity.Vente;
 
 public class SalesTab {
@@ -56,21 +52,7 @@ public class SalesTab {
 
 		// Création de la List dans laquelle seront stockées les ventes (exemple)
 
-		List<IData> salesList = new ArrayList<>();
-		// recup des info dans la base
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try(ResultSet rs = statement.executeQuery("SELECT * FROM vente")){
-				while(rs.next()) {
-					Vente v = new Vente(rs);
-					salesList.add(v);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		Vector<IData> salesList = Gestion.getAllFromTable("vente", new Vente());
 		// ==============================================================
 
 		// Affichage du tableau des ventes

@@ -111,6 +111,11 @@ public class Vente implements IData {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new Vente(rs);
+	}
 
 	/**
 	 * @brief Constructeur à utiliser créer une vente a ajouter dans la base
@@ -126,6 +131,10 @@ public class Vente implements IData {
 		this.prixVenteUni = prixVenteUni;
 		this.quantite = quantite;
 		createStruct();
+	}
+
+	public Vente() {
+		super();
 	}
 
 	public int getIdLotProduit() {

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import data.Gestion;
 import data.IData;
 import data.fieldType;
+import data.dependance_multi.ContactFournisseur;
 
 public class Achat implements IData{
 	private int idAchat;
@@ -105,6 +106,11 @@ public class Achat implements IData{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new Achat(rs);
 	}
 
 	public Achat(int idCommande, double prixAchatUni, Date dateAchat) {

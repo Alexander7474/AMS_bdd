@@ -49,21 +49,8 @@ public class ProductsTab {
 		// Afficher les Fournisseurs dans un tableau
 
 		String[] columnNames = { "SIRET", "Nom", "Adresse", "Téléphone", "Email" }; // Colonnes du tableau
-		Vector<IData> data = new Vector<>(); // Les Fournisseurs seront dans le vecteur data
-
-		// recup des info dans la base
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try (ResultSet rs = statement.executeQuery("SELECT * FROM fournisseur")) {
-				while (rs.next()) {
-					Fournisseur f = new Fournisseur(rs);
-					data.add(f);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		Vector<IData> data = Gestion.getAllFromTable("fournisseur", new Fournisseur());
  
 		Vector<Vector<String>> tableData = new Vector<>();
 

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import data.Gestion;
 import data.IData;
 import data.fieldType;
+import data.dependance_multi.ContactFournisseur;
 
 public class Commande implements IData{
 	private int idCommande;
@@ -104,6 +105,11 @@ public class Commande implements IData{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new Commande(rs);
 	}
 
 	public Commande(int idProduit, String siret, double quantite) {

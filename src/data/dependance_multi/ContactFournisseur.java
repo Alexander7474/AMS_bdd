@@ -112,6 +112,11 @@ public class ContactFournisseur implements IData {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new ContactFournisseur(rs);
+	}
 
 	public int getIdContact() {
 		return idContact;

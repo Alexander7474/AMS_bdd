@@ -116,6 +116,11 @@ public class LotProduit implements IData{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new LotProduit(rs);
+	}
 
 	public LotProduit(int idProduit, double prixVenteUni, double quantite, Date peremption, int idAchat) {
 		super();

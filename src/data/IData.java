@@ -1,6 +1,7 @@
 package data;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.HashMap;
 
 //LES CLASSES IMPLEMENTANT CETTE INTERFACE DOIVENT DISPOSEES DES ATTRIBUTS SUPPLEMENTAIRES : private String values ; private HashMap<String, fieldType> map;
@@ -12,12 +13,15 @@ public interface IData {
 	//RETOURNE UNE CHAINE DE CARACTERE PRE-REMPLIE PERMETTANT DE COMPOSER LA REQUETE INSERT ...
 	public String getValues();
 	
-	//RETOURNE UNE CHAINE DE CARACTERE PRE-REMPLIE PERMETTANT DE COMPOSER LA REQUETE DELETE ...
-		public String getValuesEq();
+	//RETOURNE UNE CHAINE DE CARACTERE PRE-REMPLIE PERMETTANT DE COMPOSER UNE COMPARAISON DANS LA REQUETE
+	public String getValuesEq();
 	
 	//remplie un statement avec ces valeurs
 	public void composeStatement(PreparedStatement statement);
 	public void composeStatementEq(PreparedStatement statement);
+	
+	//permet de build un objet IData à partir des résultat d'une requête SQL
+	public IData build(ResultSet rs);
 	
 	//GETTER DE LA MAP CREE AVEC LA METHODE getStruct ...
 	public HashMap<String, fieldType> getMap();

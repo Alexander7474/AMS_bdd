@@ -120,6 +120,11 @@ public class ProduitFournisseur implements IData{
 			e.printStackTrace();
 		}
 	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new ProduitFournisseur(rs);
+	}
 
 	public int getIdProduit() {
 		return idProduit;

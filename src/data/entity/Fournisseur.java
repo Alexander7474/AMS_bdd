@@ -89,6 +89,10 @@ public class Fournisseur implements IData{
 		}
 	}
 	
+	public Fournisseur() {
+		super();
+	}
+
 	public Fournisseur(String siret, String nom, String adresse, String numero_tel, String email) {
 		super();
 		this.siret = siret;
@@ -123,6 +127,11 @@ public class Fournisseur implements IData{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override 
+	public IData build(ResultSet rs) {
+		return new Fournisseur(rs);
 	}
 
 	public String getSiret() {
