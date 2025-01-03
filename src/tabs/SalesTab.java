@@ -38,9 +38,9 @@ public class SalesTab {
 
 		// ==============================================================
 
-		// Création du titre de l'onglet
+		// Création du titre de la partie des ventes
 
-		JLabel titleLabelSales = new JLabel("Onglet des ventes", SwingConstants.CENTER);
+		JLabel titleLabelSales = new JLabel("Produits disponibles", SwingConstants.CENTER);
 		titleLabelSales.setFont(new Font("Arial", Font.BOLD, 20));
 		GridBagConstraints cstSales = new GridBagConstraints();
 		cstSales.gridy = 0;
@@ -53,6 +53,7 @@ public class SalesTab {
 		// Création de la List dans laquelle seront stockées les ventes (exemple)
 
 		Vector<IData> salesList = Gestion.getAllFromTable("vente", new Vente());
+		
 		// ==============================================================
 
 		// Affichage du tableau des ventes
@@ -179,6 +180,10 @@ public class SalesTab {
 			}
 		});
 
+		// ==============================================================
+		
+		// Création du panier du client (sous forme de tableau)
+		
 		// ==============================================================
 
 		contentPanel.revalidate();

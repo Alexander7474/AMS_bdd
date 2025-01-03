@@ -49,6 +49,7 @@ public class OrdersTab {
 		// ==============================================================
 
 		// Titre de l'onglet commande
+		
 		JLabel titleLabelOrders = new JLabel("Onglet des commandes", SwingConstants.CENTER);
 		titleLabelOrders.setFont(new Font("Arial", Font.BOLD, 20));
 		GridBagConstraints cstOrders = new GridBagConstraints();

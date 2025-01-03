@@ -10,7 +10,7 @@ import data.Gestion;
 import data.IData;
 import data.fieldType;
 
-public class LotProduit implements IData{
+public class LotProduit implements IData {
 	private int idLotProduit;
 	private int idProduit;
 	private double prixVenteUni;

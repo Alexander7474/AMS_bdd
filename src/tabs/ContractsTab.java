@@ -81,72 +81,72 @@ public class ContractsTab {
 		}
 
 		JTable contractsTable = new JTable(tableModelContracts);
-		
-        // Personnaliser l'en-tête de la table
-        JTableHeader header = contractsTable.getTableHeader();
-        header.setBackground(Palette.BUTTON_ACTIVE); // Couleur de fond de l'en-tête
-        header.setForeground(Palette.TEXT_LIGHT); // Couleur du texte de l'en-tête
-        header.setFont(new Font("Arial", Font.BOLD, 14)); // Police de l'en-tête
-        
+
+		// Personnaliser l'en-tête de la table
+		// !!! JOLI -> JE LE FERAI POUR LES AUTRES ONGLETS
+		JTableHeader header = contractsTable.getTableHeader();
+		header.setBackground(Palette.BUTTON_ACTIVE); // Couleur de fond de l'en-tête
+		header.setForeground(Palette.TEXT_LIGHT); // Couleur du texte de l'en-tête
+		header.setFont(new Font("Arial", Font.BOLD, 14)); // Police de l'en-tête
+
 		contractsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		
+
 		contractsTable.setBackground(new Color(230, 230, 250)); // Couleur de fond de la table (lavande)
 		contractsTable.setForeground(Color.BLACK); // Couleur du texte
 		contractsTable.setGridColor(Color.GRAY); // Couleur des bordures entre les cellules
 		contractsTable.setSelectionBackground(new Color(100, 149, 237)); // Couleur de sélection (bleu clair)
 		contractsTable.setSelectionForeground(Color.WHITE); // Couleur du texte lors de la sélection
-		
+
 		// Personnaliser la hauteur des lignes
 		contractsTable.setRowHeight(30); // Hauteur de ligne plus grande
-	
-		//détermine la taille de la table
+
+		// détermine la taille de la table
 		int columnCnt = contractsTable.getColumnCount();
-		int prefSizeX = 1000/columnCnt;
-		
+		int prefSizeX = 1000 / columnCnt;
+
 		for (int column = 0; column < columnCnt; column++) {
 			contractsTable.getColumnModel().getColumn(column).setPreferredWidth(prefSizeX);
-        }
-		
+		}
+
 		contractsTable.setPreferredScrollableViewportSize(new Dimension(prefSizeX * columnCnt, 300));
 
-        // Personnaliser le rendu des cellules
+		// Personnaliser le rendu des cellules
 		contractsTable.setDefaultRenderer(Object.class, new TableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus,
-                                                           int row, int column) {
-                // Créer un composant de cellule
-                JLabel label = new JLabel(value.toString());
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+				// Créer un composant de cellule
+				JLabel label = new JLabel(value.toString());
 
-                // Appliquer un style spécifique pour les cellules
-                if (isSelected) {
-                    label.setBackground(Palette.BUTTON_ACTIVE); // Fond bleu clair pour les cellules sélectionnées
-                    label.setForeground(Palette.TEXT_LIGHT); // Texte blanc pour les cellules sélectionnées
-                } else {
-                    // Personnaliser la couleur de fond selon la ligne
-                    if (row % 2 == 0) {
-                        label.setBackground(Palette.BACKGROUND_LIGHT_DARK); // Fond bleu clair pour les lignes paires
-                    } else {
-                        label.setBackground(Palette.BACKGROUND_LIGHT); // Fond blanc pour les lignes impaires
-                    }
-                    label.setForeground(Palette.TEXT_DARK); // Texte noir
-                }
+				// Appliquer un style spécifique pour les cellules
+				if (isSelected) {
+					label.setBackground(Palette.BUTTON_ACTIVE); // Fond bleu clair pour les cellules sélectionnées
+					label.setForeground(Palette.TEXT_LIGHT); // Texte blanc pour les cellules sélectionnées
+				} else {
+					// Personnaliser la couleur de fond selon la ligne
+					if (row % 2 == 0) {
+						label.setBackground(Palette.BACKGROUND_LIGHT_DARK); // Fond bleu clair pour les lignes paires
+					} else {
+						label.setBackground(Palette.BACKGROUND_LIGHT); // Fond blanc pour les lignes impaires
+					}
+					label.setForeground(Palette.TEXT_DARK); // Texte noir
+				}
 
-                // Rendre la cellule opaque
-                label.setOpaque(true);
-                label.setHorizontalAlignment(SwingConstants.CENTER); // Centrer le texte
+				// Rendre la cellule opaque
+				label.setOpaque(true);
+				label.setHorizontalAlignment(SwingConstants.CENTER); // Centrer le texte
 
-                return label;
-            }
-        });
+				return label;
+			}
+		});
 
 		JScrollPane scrollPaneContracts = new JScrollPane(contractsTable);
 		scrollPaneContracts.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPaneContracts.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		
+
 		contractsTable.revalidate();
 		contractsTable.repaint();
-		
+
 		cstContracts.gridy = 1;
 		contentPanel.add(scrollPaneContracts, cstContracts);
 
@@ -186,29 +186,30 @@ public class ContractsTab {
 
 					Contrat newContrat = new Contrat(siretField.getText(), Integer.parseInt(produitField.getText()),
 							Double.parseDouble(prixField.getText()), dateDebutField.getText(), dateFinField.getText());
-					
+
 					String query = "SELECT * FROM produit_fournisseur WHERE id_produit = ? AND siret = ?";
 					boolean canMakeContrat = false;
-					
-					try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+
+					try (PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)) {
 						statement.setInt(1, newContrat.getIdProduit());
 						statement.setString(2, newContrat.getSiret());
 						ResultSet rs = statement.executeQuery();
-						if(rs.next()) {
+						if (rs.next()) {
 							canMakeContrat = true;
 						}
 					}
 
-					if(canMakeContrat) {
+					if (canMakeContrat) {
 						contractsList.add(newContrat);
-						tableModelContracts.addRow(
-								new Object[] { newContrat.getIdContrat(), newContrat.getSiret(), newContrat.getIdProduit(),
-										newContrat.getPrixUni(), newContrat.getDateDebut(), newContrat.getDateFin() });
-	
+						tableModelContracts.addRow(new Object[] { newContrat.getIdContrat(), newContrat.getSiret(),
+								newContrat.getIdProduit(), newContrat.getPrixUni(), newContrat.getDateDebut(),
+								newContrat.getDateFin() });
+
 						Gestion.insert(newContrat, "contrat");
 						JOptionPane.showMessageDialog(frame, "Contrat ajouté avec succès !");
-					}else {
-						JOptionPane.showMessageDialog(frame, "Impossible de créer le contrat, le fournisseur n'a pas le produit voulue !");
+					} else {
+						JOptionPane.showMessageDialog(frame,
+								"Impossible de créer le contrat, le fournisseur n'a pas le produit voulue !");
 					}
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur lors de l'ajout du contrat : " + ex.getMessage(),
