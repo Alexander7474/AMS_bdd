@@ -246,7 +246,7 @@ public class ContractsTab {
 					tableModelContracts.setValueAt(selectedContrat.getDateDebut(), selectedRow, 4);
 					tableModelContracts.setValueAt(selectedContrat.getDateFin(), selectedRow, 5);
 
-					Gestion.update(selectedContrat, selectedContrat, "contrat");
+					Gestion.update(selectedContrat, "contrat", "id_contrat", selectedContrat.getIdContrat());
 					JOptionPane.showMessageDialog(frame, "Contrat modifié avec succès !");
 				} catch (Exception ex) {
 					JOptionPane.showMessageDialog(frame, "Erreur lors de la modification : " + ex.getMessage(),

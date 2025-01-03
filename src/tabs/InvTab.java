@@ -139,11 +139,7 @@ public class InvTab {
 							selectedLotProduit.getIdAchat());
 
 					// Mise à jour dans la base de données
-					String query = "UPDATE lot_produit SET " + updatedLotProduit.getValuesEq() + " WHERE id_lot_produit = " +selectedLotProduit.getIdLotProduit();
-					try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
-						updatedLotProduit.composeStatementEq(statement);
-						statement.executeUpdate();
-					}
+					Gestion.update(selectedLotProduit, "lot_produit", "id_lot_produit", selectedLotProduit.getIdLotProduit());
 
 					// Mise à jour dans le tableau
 					tableModelInv.setValueAt(selectedLotProduit.getPrixVenteUni(), selectedRow, 2);

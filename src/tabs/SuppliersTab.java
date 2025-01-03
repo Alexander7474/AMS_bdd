@@ -179,18 +179,7 @@ public class SuppliersTab {
 			if (result == JOptionPane.OK_OPTION) {
 				Fournisseur fournisseur = new Fournisseur(oldSupplier.getSiret(), nomField.getText(),
 						adresseField.getText(), numeroTelField.getText(), emailField.getText());
-				try {
-					// Mise à jour dans la base de données
-					String query = "UPDATE fournisseur SET " + fournisseur.getValuesEq() + " WHERE siret = '" + oldSupplier.getSiret() + "'";
-					try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
-						fournisseur.composeStatementEq(statement);
-						statement.executeUpdate();
-					}
-					JOptionPane.showMessageDialog(frame, "Fournisseur modifié avec succès !");
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, "Erreur : " + ex.getMessage(), "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-				}
+				Gestion.update(fournisseur, "fournisseur", "siret", fournisseur.getSiret());
 			}
 		});
 

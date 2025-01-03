@@ -177,20 +177,10 @@ public class ProductsTab {
 			int result = JOptionPane.showConfirmDialog(frame, form, "Modifier un Fournisseur",
 					JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				Fournisseur Fournisseur = new Fournisseur(oldSupplier.getSiret(), nomField.getText(),
+				Fournisseur fournisseur = new Fournisseur(oldSupplier.getSiret(), nomField.getText(),
 						adresseField.getText(), numeroTelField.getText(), emailField.getText());
-				try {
-					// Mise à jour dans la base de données
-					String query = "UPDATE fournisseur SET " + Fournisseur.getValuesEq() + " WHERE siret = '" + oldSupplier.getSiret() + "'";
-					try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
-						Fournisseur.composeStatementEq(statement);
-						statement.executeUpdate();
-					}
-					JOptionPane.showMessageDialog(frame, "Fournisseur modifié avec succès !");
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(frame, "Erreur : " + ex.getMessage(), "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-				}
+				
+				Gestion.update(fournisseur, "fournisseur", "siret", fournisseur.getSiret());
 			}
 		});
 

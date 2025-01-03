@@ -216,7 +216,7 @@ public class Gestion {
 				e.printStackTrace();
 			}
 		}else {
-			System.err.println("Erreur lors de la suppression " + table + ", la map de la table ne correspond pas !");
+			System.err.println("Erreur lors de la suppression dans " + table + ", la map de la table ne correspond pas !");
 			for(String str : tableMap.keySet()) {
 				System.out.println(str + ": " + tableMap.get(str));
 			}
@@ -226,8 +226,80 @@ public class Gestion {
 		}
 	}
 	
-	public static void update(IData n, IData newOne, String table) {
-		//todo
+	/**
+	 * @brief Permet de mettre a jour un table de la base
+	 * 
+	 * @param newOne Nouvelle objet
+	 * @param table Table ou mettre à jour
+	 * @param sqlRef attribut SQL à utilisé pour déterminer l'objet a modifier
+	 * @param id Valeur de cette attribut SQL (int)
+	 */
+	public static void update(IData newOne,String table, String sqlRef, int id) {
+		//on récupère la map de filedType de la table
+		HashMap<String, fieldType> tableMap = null;
+		try {
+			tableMap = structTable(table, false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(tableMap != null && newOne.check(tableMap)) {
+			String query = "UPDATE " + table + " SET " + newOne.getValuesEq() + " WHERE " + sqlRef + " = " + id; // on n'utilise pas le ? car id n'est rentrée par l'utilisateur donc pas d'injection possible 
+			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query);) {
+				newOne.composeStatementEq(statement);
+				statement.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			System.err.println("Erreur lors de la mofifcation de " + table + ", la map de la table ne correspond pas !");
+			for(String str : tableMap.keySet()) {
+				System.out.println(str + ": " + tableMap.get(str));
+			}
+			for(String str : newOne.getMap().keySet()) {
+				System.out.println(str + ": " + newOne.getMap().get(str));
+			}
+		}
+	}
+	
+	/**
+	 * @brief Permet de mettre a jour un table de la base
+	 * 
+	 * @param newOne Nouvelle objet
+	 * @param table Table ou mettre à jour
+	 * @param sqlRef attribut SQL à utilisé pour déterminer l'objet a modifier
+	 * @param id Valeur de cette attribut SQL (String)
+	 */
+	public static void update(IData newOne,String table, String sqlRef, String id) {
+		//on récupère la map de filedType de la table
+		HashMap<String, fieldType> tableMap = null;
+		try {
+			tableMap = structTable(table, false);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(tableMap != null && newOne.check(tableMap)) {
+			String query = "UPDATE " + table + " SET " + newOne.getValuesEq() + " WHERE " + sqlRef + " = '" + id + "'"; // on n'utilise pas le ? car id n'est rentrée par l'utilisateur donc pas d'injection possible 
+			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query);) {
+				newOne.composeStatementEq(statement);
+				statement.executeUpdate();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else {
+			System.err.println("Erreur lors de la mofifcation de " + table + ", la map de la table ne correspond pas !");
+			for(String str : tableMap.keySet()) {
+				System.out.println(str + ": " + tableMap.get(str));
+			}
+			for(String str : newOne.getMap().keySet()) {
+				System.out.println(str + ": " + newOne.getMap().get(str));
+			}
+		}
 	}
 	
 }
