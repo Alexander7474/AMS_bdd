@@ -20,139 +20,63 @@ import java.util.List;
 
 
 public class ManagementSoftware {
+	
+	private static JPanel sidebar;
+	private static JFrame frame;
+	private static Theme theme = Theme.LIGHT;
 
 	public static void loadMainApplication(String username) {
 		
-		//On vérifie tous les lots possiblement périmé pour en faire des ventes à 0€
-
-		List<IData> invList = new ArrayList<>();
-		// recup des info dans la base
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try(ResultSet rs = statement.executeQuery("SELECT * FROM lot_produit WHERE peremption < CURRENT_DATE")){
-				while(rs.next()) {
-					LotProduit lp = new LotProduit(rs);
-					invList.add(lp);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		// ==============================================================
+		ManagementSoftware.clearApp();
+		Gestion.appStart();
 		
-		for(IData item : invList) {
-			if(item instanceof LotProduit lot) {
-				//déclarer une vente des produits restant à 0€
-				Vente updatedVente = new Vente(lot.getIdLotProduit(),
-						String.valueOf(LocalDate.now()), 0,
-						lot.getQuantite());
-				Gestion.insert(updatedVente, "vente");
-				
-				// Mise à jour dans la base de données pour changé la quantité du lot de produit
-				lot.setQuantite(0);
-				String query = "UPDATE lot_produit SET " + lot.getValuesEq() + " WHERE id_lot_produit = " + lot.getIdLotProduit();
-				try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
-					lot.composeStatementEq(statement);
-					statement.executeUpdate();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					System.err.println("Impossible de mettre a jour les lots de produit : ");
-					e1.printStackTrace();
-				}
-			}
-		}
+		// ==============================================================
+		
+		// On créer la frame et la sidebar si ce n'est pas fais
+		getFrame();
+		getSidebar();
 
 		// ==============================================================
-
-		// Création de la fenêtre
-		JFrame frame = new JFrame("AMS - Logiciel de gestion");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// ==============================================================
-
-		// Création de la barre latérale
-		JPanel sidebar = new JPanel();
-		sidebar.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 15));
-		sidebar.setPreferredSize(new Dimension(200, 0));
-		sidebar.setBackground(new Color(168, 213, 186)); // Vert menthe
-
-		// ==============================================================
+		// Création de l'affichage du profil utilisateur 
 
 		// Affichage de l'utilisateur connecté
-		JLabel userLabel = new JLabel("Utilisateur : " + username);
-		userLabel.setFont(new Font("Arial", Font.BOLD, 20));
-		sidebar.add(userLabel);
-
-		// ==============================================================
+		JLabel userLabel = ManagementSoftware.getSidebarText("Utilisateur : " + username);
 
 		// Affichage du rôle de l'utilisateur connecté
-		JLabel roleLabel = new JLabel("Rôle : " + UserManager.getUserRole(username));
-		roleLabel.setFont(new Font("Arial", Font.BOLD, 20));
-		sidebar.add(roleLabel);
+		JLabel roleLabel = ManagementSoftware.getSidebarText("Rôle : " + UserManager.getUserRole(username));
 
 		// ==============================================================
+		// Création des boutons 
 
 		// Bouton pour accéder à la gestion des fournisseurs
-		JButton inv = new JButton("Inventaire/Lots");
-		inv.setBackground(new Color(255, 183, 77));
-		sidebar.add(inv);
-		sidebar.add(Box.createVerticalStrut(15));
-
-		// ==============================================================
+		JButton inv = ManagementSoftware.getSidebarButton("Inventaire/Lots");
 
 		// Bouton pour accéder à la gestion des fournisseurs
-		JButton suppliers = new JButton("Fournisseurs/Contacts");
-		suppliers.setBackground(new Color(255, 183, 77));
-		sidebar.add(suppliers);
-
-		// ==============================================================
+		JButton suppliers = ManagementSoftware.getSidebarButton("Fournisseurs/Contacts");
 
 		// Bouton pour accéder à la gestion des produits
-		JButton products = new JButton("Fournisseurs/Produits");
-		products.setBackground(new Color(255, 183, 77));
-		sidebar.add(products);
-
-		// ==============================================================
+		JButton products = ManagementSoftware.getSidebarButton("Fournisseurs/Produits");
 
 		// Bouton pour accéder à la gestion des ventes
-		JButton sales = new JButton("Ventes");
-		sales.setBackground(new Color(255, 183, 77));
-		sidebar.add(sales);
-
-		// ==============================================================
+		JButton sales = ManagementSoftware.getSidebarButton("Ventes");
 
 		// Bouton pour accéder à la gestion des contrats
-		JButton contracts = new JButton("Contrats");
-		contracts.setBackground(new Color(255, 183, 77));
-		sidebar.add(contracts);
-
-		// ==============================================================
+		JButton contracts = ManagementSoftware.getSidebarButton("Contrats");
 
 		// Bouton pour accéder à la gestion des commandes
-		JButton orders = new JButton("Commandes/Achats");
-		orders.setBackground(new Color(255, 183, 77));
-		sidebar.add(orders);
-
-		// ==============================================================
+		JButton orders = ManagementSoftware.getSidebarButton("Commandes/Achats");
 
 		// Bouton pour accéder aux paramètres de l'application
-		JButton stats = new JButton("Statistiques");
-		stats.setBackground(new Color(255, 183, 77));
-		sidebar.add(stats);
+		JButton stats = ManagementSoftware.getSidebarButton("Statistiques");
 				
-		// ==============================================================
-
 		// Bouton pour accéder aux paramètres de l'application
-		JButton parameters = new JButton("Paramètres");
-		parameters.setBackground(new Color(255, 183, 77));
-		sidebar.add(parameters);
+		JButton parameters = ManagementSoftware.getSidebarButton("Paramètres");
 		
 		// ==============================================================
 
 		// Bouton pour se déconnecter
-		JButton logout = new JButton("Déconnexion");
-		logout.setBackground(new Color(102, 187, 106)); // Vert foncé
-		sidebar.add(logout);
+		JButton logout = ManagementSoftware.getSidebarButton("Déconnexion");
 
 		logout.addActionListener(e -> {
 			frame.dispose();
@@ -175,8 +99,8 @@ public class ManagementSoftware {
 		contentPanel.add(titleLabel);
 
 		// ==============================================================
-		
 		//inventaire
+		
 		inv.addActionListener(e -> {
 
 			contentPanel.removeAll();
@@ -185,8 +109,8 @@ public class ManagementSoftware {
 			
 		});
 		// ==============================================================
-
 		// Onglet des fournisseurs
+		
 		suppliers.addActionListener(e -> {
 
 			contentPanel.removeAll(); // Rénitialise le contenu du contentPanel = page vide
@@ -226,8 +150,8 @@ public class ManagementSoftware {
 		});
 		
 		// ==============================================================
-
 		// Onglet des commandes
+		
 		orders.addActionListener(e -> {
 
 			contentPanel.removeAll();
@@ -235,9 +159,9 @@ public class ManagementSoftware {
 			OrdersTab.loadOrdersTab(contentPanel, frame);
 			
 		});
+		
 		// ==============================================================
-
-		// Quand on clique sur l'onglet des stast
+		// Onglet des stats
 
 		stats.addActionListener(e -> {
 
@@ -246,7 +170,6 @@ public class ManagementSoftware {
 			StatsTab.loadStatsTab(contentPanel, frame);
 			
 		});
-		
 		
 		// ==============================================================
 
@@ -270,5 +193,81 @@ public class ManagementSoftware {
 		frame.setVisible(true); // Rendre la fenêtre visible
 
 	};
-
+	
+	/**
+	 * @brief permet de clear l'affichage de l'application
+	 * 
+	 * @details à utiliser après la connection d'un utilisateur pour éviter de dupliquer certain item;
+	 */
+	public static void clearApp() {
+		sidebar = null;
+		frame = null;
+	}
+	
+	/**
+	 * @brief Créé un bouton avec les caractéristique de la sidebar et l'ajoute automatiquement à la sidebar
+	 * 
+	 * @param text
+	 * @return
+	 */
+	public static JButton getSidebarButton(String text) {
+		JButton button = new JButton(text);
+		
+		//caractèristiques du bouton
+		Dimension bDim = new Dimension(ManagementSoftware.getSidebar().getPreferredSize().width, 40);
+		button.setMaximumSize(bDim);
+		button.setBackground(Palette.BUTTON_DARK_ACTIVE);
+		button.setBorderPainted(false);
+		
+		//on ajoute le boutton à la sidebar
+		ManagementSoftware.getSidebar().add(button);
+		
+		return button;
+	}
+	
+	public static JLabel getSidebarText(String text) {
+		JLabel label = new JLabel(text);
+		
+		//caractèristiques du label
+		label.setFont(new Font("Arial", Font.BOLD, 20));
+		label.setForeground(Palette.TEXT_LIGHT);
+		
+	    ManagementSoftware.getSidebar().add(label);
+		
+		return label;
+	}
+	
+	/**
+	 * @brief Créé la sidebar
+	 * 
+	 * @return
+	 */
+	public static JPanel getSidebar() {
+		// Création de la barre latérale
+		if(sidebar == null) {
+			sidebar = new JPanel();
+			sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+			sidebar.setPreferredSize(new Dimension(300, ManagementSoftware.getFrame().getHeight()));
+			sidebar.setBackground(Palette.BACKGROUND_DARK_SIDEBAR); // Vert menthe
+		}
+		
+		return sidebar;
+	}
+	
+	/**
+	 * @brief créé la frame
+	 * 
+	 * @return
+	 */
+	public static JFrame getFrame() {
+		// Création de la fenêtre
+		if(frame == null) {
+			frame = new JFrame("AMS - Logiciel de gestion");
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setSize(1920,1080);
+		}
+		
+		return frame;
+	}
+	
 };

@@ -6,16 +6,20 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import data.entity.Contrat;
+import data.entity.LotProduit;
+import data.entity.Vente;
 
 /**
  * @author Alexandre LANTERNIER
  */
 public class Gestion {
-	
 	/**
 	 * @author Alexandre LANTERNIER
 	 * @brief Renvoie la une hashmap donnant la structure d'une table de etd
@@ -327,5 +331,51 @@ public class Gestion {
 		}
 		
 		return vec;
+	}
+	
+	/**
+	 * @brief méthode à utiliser au démarrage de l'application pour faire certaine automatisation
+	 * 
+	 * @details Détection des lots de produits périmé(s) / ...
+	 */
+	public static void appStart() {
+		//On vérifie tous les lots possiblement périmé pour en faire des ventes à 0€
+		Vector<IData> invList = new Vector<>();
+		
+		// recup des info dans la base
+		try {
+			Statement statement = Connexion.getConnexion().createStatement();
+			try(ResultSet rs = statement.executeQuery("SELECT * FROM lot_produit WHERE peremption < CURRENT_DATE")){
+				while(rs.next()) {
+					LotProduit lp = new LotProduit(rs);
+					invList.add(lp);
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(IData item : invList) {
+			if(item instanceof LotProduit lot) {
+				//déclarer une vente des produits restant à 0€
+				Vente updatedVente = new Vente(lot.getIdLotProduit(),
+						String.valueOf(LocalDate.now()), 0,
+						lot.getQuantite());
+				Gestion.insert(updatedVente, "vente");
+				
+				// Mise à jour dans la base de données pour changé la quantité du lot de produit
+				lot.setQuantite(0);
+				String query = "UPDATE lot_produit SET " + lot.getValuesEq() + " WHERE id_lot_produit = " + lot.getIdLotProduit();
+				try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query)){
+					lot.composeStatementEq(statement);
+					statement.executeUpdate();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					System.err.println("Impossible de mettre a jour les lots de produit : ");
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 }

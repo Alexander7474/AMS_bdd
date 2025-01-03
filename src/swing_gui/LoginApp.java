@@ -11,6 +11,10 @@ public class LoginApp {
 
 		// Création de la fenêtre
 		JFrame frame = new JFrame("AMS - Page de connexion");
+		
+		frame.setSize(800,600);
+		frame.setExtendedState(JFrame.NORMAL);
+		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Fermeture du programme à la fermeture de la fenêtre
 
 		// ==============================================================
@@ -92,9 +96,10 @@ public class LoginApp {
 		// Lorsque l'on clique sur le bouton "Se connecter"
 		loginButton.addActionListener(e -> {
 
+			// !!! A MODIFIER J'AI MIS UN AUTOLOADER !!!
 			// Récupération des champs
-			String username = userText.getText();
-			String password = new String(passwordText.getPassword());
+			String username = "admin"; //userText.getText();
+			String password = "admin"; //new String(passwordText.getPassword());
 
 			if ((username.isEmpty()) || (password.isEmpty())) {
 				messageLabel.setText("Les champs ne peuvent pas être vides");
@@ -115,7 +120,6 @@ public class LoginApp {
 		// ==============================================================
 
 		frame.add(panel); // Ajoute le conteneur à la fenêtre
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // La fenêtre occupe tout l'écran
 		frame.setVisible(true); // Rendre la fenêtre visible
 
 	}

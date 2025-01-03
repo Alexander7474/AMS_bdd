@@ -44,7 +44,7 @@ public class UserManager {
 
 	// Vérifier qu'un utilisateur existe bien dans la table
 
-	public static boolean verifyUser(String username, String password) {
+	public static boolean verifyUser(String username, String password) {	
 		String query = "SELECT password FROM utilisateur WHERE username = ?";
 
 		try (Connection conn = Connexion.getConnexion(); // Création d'une connexion vers la base de donnée
