@@ -98,9 +98,7 @@ public class InvTab {
 		// Bouton pour modifier une LotProduit
 
 		// Création du bouton
-		JButton modifySaleButton = new JButton("Modifier un lot");
-		modifySaleButton.setForeground(grisDoux);
-		modifySaleButton.setBackground(jauneDoux);
+		JButton modifySaleButton = TabManager.getButton("Modifier un lot");
 		cstInv.gridy = 3;
 		contentPanel.add(modifySaleButton, cstInv);
 
@@ -169,9 +167,7 @@ public class InvTab {
 
 		// Bouton pour supprimer une LotProduit
 
-		JButton deleteSaleButton = new JButton("Supprimer un LotProduit");
-		deleteSaleButton.setForeground(grisDoux);
-		deleteSaleButton.setBackground(jauneDoux);
+		JButton deleteSaleButton = TabManager.getButton("Supprimer un LotProduit");
 		cstInv.gridy = 4;
 		contentPanel.add(deleteSaleButton, cstInv);
 
@@ -229,9 +225,7 @@ public class InvTab {
 		// Bouton pour ajouter un produit au panier
 
 		// Création du bouton
-		JButton addToCartButton = new JButton("Ajouter au panier");
-		addToCartButton.setForeground(grisDoux);
-		addToCartButton.setBackground(jauneDoux);
+		JButton addToCartButton = TabManager.getButton("Ajouter au panier");
 		cstInv.gridy = 2;
 		contentPanel.add(addToCartButton, cstInv);
 
@@ -285,9 +279,7 @@ public class InvTab {
 		// ==============================================================
 
 		// Bouton pour modifier un produit dans le panier
-		JButton modifyCartButton = new JButton("Modifier le panier");
-		modifyCartButton.setForeground(grisDoux);
-		modifyCartButton.setBackground(jauneDoux);
+		JButton modifyCartButton = TabManager.getButton("Modifier le panier");
 		cstCart.gridy = 2;
 		contentPanel.add(modifyCartButton, cstCart);
 
@@ -345,9 +337,7 @@ public class InvTab {
 
 		// Bouton pour supprimer un produit du panier
 
-		JButton deleteCartButton = new JButton("Supprimer du panier");
-		deleteCartButton.setForeground(grisDoux);
-		deleteCartButton.setBackground(jauneDoux);
+		JButton deleteCartButton = TabManager.getButton("Supprimer du panier");
 		cstCart.gridy = 3;
 		contentPanel.add(deleteCartButton, cstCart);
 
@@ -387,16 +377,14 @@ public class InvTab {
 		// ==============================================================
 
 		// Bouton pour paiement en espèces
-		JButton payCashButton = new JButton("Payer en espèces");
-		payCashButton.setForeground(grisDoux);
+		JButton payCashButton = TabManager.getButton("Payer en espèces");
 		payCashButton.setBackground(Color.RED);
 		cstCart.gridy = 4;
 		cstCart.gridwidth = 2;
 		contentPanel.add(payCashButton, cstCart);
 
 		// Bouton pour paiement par carte bancaire
-		JButton payCardButton = new JButton("Payer par carte bancaire");
-		payCardButton.setForeground(grisDoux);
+		JButton payCardButton = TabManager.getButton("Payer par carte bancaire");
 		payCardButton.setBackground(Color.GREEN);
 		cstCart.gridy = 5;
 		cstCart.gridwidth = 2;

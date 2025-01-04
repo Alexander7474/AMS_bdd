@@ -77,9 +77,7 @@ public class ProductsTab {
 
 		// Bouton pour insérer un Fournisseur
 
-		JButton insertSupplierButton = new JButton("Ajouter un Fournisseur");
-		insertSupplierButton.setForeground(grisDoux);
-		insertSupplierButton.setBackground(jauneDoux);
+		JButton insertSupplierButton = TabManager.getButton("Ajouter un Fournisseur");
 		cstSuppliers.gridy = 2;
 		contentPanel.add(insertSupplierButton, cstSuppliers);
 
@@ -126,9 +124,7 @@ public class ProductsTab {
 
 		// Bouton pour modifier un Fournisseur
 
-		JButton editSupplierButton = new JButton("Modifier un Fournisseur");
-		editSupplierButton.setForeground(grisDoux);
-		editSupplierButton.setBackground(jauneDoux);
+		JButton editSupplierButton = TabManager.getButton("Modifier un Fournisseur");
 		cstSuppliers.gridy = 3;
 		contentPanel.add(editSupplierButton, cstSuppliers);
 
@@ -177,9 +173,7 @@ public class ProductsTab {
 
 		// Bouton pour supprimer un Fournisseur
 
-		JButton deleteSupplierButton = new JButton("Supprimer un Fournisseur");
-		deleteSupplierButton.setForeground(grisDoux);
-		deleteSupplierButton.setBackground(jauneDoux);
+		JButton deleteSupplierButton = TabManager.getButton("Supprimer un Fournisseur");
 		cstSuppliers.gridy = 4;
 		contentPanel.add(deleteSupplierButton, cstSuppliers);
 
@@ -275,9 +269,7 @@ public class ProductsTab {
 
  		// Bouton pour lier les Produit
  		
- 		JButton linkProduitButton = new JButton("Lier Produit/Fournisseur");
- 		linkProduitButton.setForeground(grisDoux);
- 		linkProduitButton.setBackground(jauneDoux);
+ 		JButton linkProduitButton = TabManager.getButton("Lier Produit/Fournisseur");
  		cstSuppliers.gridy = 5;
  		cstSuppliers.gridx = 0;
  		contentPanel.add(linkProduitButton, cstSuppliers);
@@ -300,9 +292,7 @@ public class ProductsTab {
 
  	 		// Bouton pour delier les Produit
  	 		
- 	 		JButton unlinkProduitButton = new JButton("Délier Produit/Fournisseur");
- 	 		unlinkProduitButton.setForeground(grisDoux);
- 	 		unlinkProduitButton.setBackground(jauneDoux);
+ 	 		JButton unlinkProduitButton = TabManager.getButton("Délier Produit/Fournisseur");
  	 		cstSuppliers.gridy = 6;
  	 		cstSuppliers.gridx = 0;
  	 		contentPanel.add(unlinkProduitButton, cstSuppliers);
@@ -323,9 +313,7 @@ public class ProductsTab {
 
 		// Bouton pour afficher les Produits
 		
-		JButton showProduitButton = new JButton("Afficher tous les Produit(s)");
-		showProduitButton.setForeground(grisDoux);
-		showProduitButton.setBackground(jauneDoux);
+		JButton showProduitButton = TabManager.getButton("Afficher tous les Produit(s)");
 		cstSuppliers.gridy = 4;
 		cstSuppliers.gridx = 50;
 		contentPanel.add(showProduitButton, cstSuppliers);
@@ -363,9 +351,7 @@ public class ProductsTab {
 
 		// Bouton pour ajouter un Produit
 
-		JButton insertProduitButton = new JButton("Ajouter un Produit");
-		insertProduitButton.setForeground(grisDoux);
-		insertProduitButton.setBackground(jauneDoux);
+		JButton insertProduitButton = TabManager.getButton("Ajouter un Produit");
 		cstSuppliers.gridy = 2;
 		cstSuppliers.gridx = 50;
 		contentPanel.add(insertProduitButton, cstSuppliers);
@@ -404,9 +390,7 @@ public class ProductsTab {
 		// Bouton pour supprimer un Produit
 
 		// Création d'un bouton
-		JButton deleteProduitButton = new JButton("Supprimer un Produit");
-		deleteProduitButton.setForeground(grisDoux);
-		deleteProduitButton.setBackground(jauneDoux);
+		JButton deleteProduitButton = TabManager.getButton("Supprimer un Produit");
 		cstSuppliers.gridy = 3;
 		cstSuppliers.gridx = 50;
 		contentPanel.add(deleteProduitButton, cstSuppliers);

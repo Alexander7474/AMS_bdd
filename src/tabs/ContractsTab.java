@@ -90,9 +90,7 @@ public class ContractsTab {
 
 		// Bouton pour ajouter un contrat
 
-		JButton addContractButton = new JButton("Ajouter un contrat");
-		addContractButton.setForeground(grisDoux);
-		addContractButton.setBackground(jauneDoux);
+		JButton addContractButton = TabManager.getButton("Ajouter un contrat");
 		cstContracts.gridy = 2;
 		contentPanel.add(addContractButton, cstContracts);
 
@@ -158,9 +156,7 @@ public class ContractsTab {
 
 		// Bouton pour supprimer un contrat
 
-		JButton deleteContractButton = new JButton("Supprimer un contrat");
-		deleteContractButton.setForeground(grisDoux);
-		deleteContractButton.setBackground(jauneDoux);
+		JButton deleteContractButton = TabManager.getButton("Supprimer un contrat");
 		cstContracts.gridy = 3;
 		contentPanel.add(deleteContractButton, cstContracts);
 
@@ -191,9 +187,7 @@ public class ContractsTab {
 
 		// Bouton pour modifier un contrat
 
-		JButton editContractButton = new JButton("Modifier un contrat");
-		editContractButton.setForeground(grisDoux);
-		editContractButton.setBackground(jauneDoux);
+		JButton editContractButton = TabManager.getButton("Modifier un contrat");
 		cstContracts.gridy = 4;
 		contentPanel.add(editContractButton, cstContracts);
 

@@ -1,6 +1,9 @@
 package swing_gui;
 
 import javax.swing.*;
+
+import tabs.TabManager;
+
 import java.awt.*;
 
 public class LoginApp {
@@ -74,9 +77,7 @@ public class LoginApp {
 		// ==============================================================
 
 		// Ajout d'un bouton pour se connecter
-		JButton loginButton = new JButton("Se connecter");
-		loginButton.setBackground(new Color(255, 183, 77)); // Jaune doux
-		loginButton.setForeground(new Color(51, 51, 51));
+		JButton loginButton = TabManager.getButton("Se connecter");
 		cst.gridx = 0;
 		cst.gridy = 3; // Le bouton sera en dessous des composants qui concernent le mot de passe
 		cst.gridwidth = 2;

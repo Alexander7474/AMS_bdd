@@ -124,9 +124,7 @@ public class OrdersTab {
 		// Bouton pour passer une commande
 
 		// Création du bouton
-		JButton addOrderButton = new JButton("Passer une commande");
-		addOrderButton.setForeground(grisDoux);
-		addOrderButton.setBackground(jauneDoux);
+		JButton addOrderButton = TabManager.getButton("Passer une commande");
 		cstOrders.gridy = 2;
 		contentPanel.add(addOrderButton, cstOrders);
 
@@ -170,9 +168,7 @@ public class OrdersTab {
 
 		// Bouton pour valider une commande
 		
-		JButton validateOrderButton = new JButton("Valider une commande");
-		validateOrderButton.setForeground(grisDoux);
-		validateOrderButton.setBackground(jauneDoux);
+		JButton validateOrderButton = TabManager.getButton("Valider une commande");
 		cstOrders.gridy = 3;
 		contentPanel.add(validateOrderButton, cstOrders);
 

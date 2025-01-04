@@ -76,9 +76,7 @@ public class SalesTab {
 
 		// Bouton pour ajouter une vente
 
-		JButton addSaleButton = new JButton("Ajouter une vente");
-		addSaleButton.setForeground(grisDoux);
-		addSaleButton.setBackground(jauneDoux);
+		JButton addSaleButton = TabManager.getButton("Ajouter une vente");
 		cstSales.gridy = 2;
 		contentPanel.add(addSaleButton, cstSales);
 
@@ -139,9 +137,7 @@ public class SalesTab {
 		// ==============================================================
 
 		// Bouton pour supprimer une vente
-		JButton deleteSaleButton = new JButton("Supprimer une vente");
-		deleteSaleButton.setForeground(grisDoux);
-		deleteSaleButton.setBackground(jauneDoux);
+		JButton deleteSaleButton = TabManager.getButton("Supprimer une vente");
 		cstSales.gridy = 4;
 		contentPanel.add(deleteSaleButton, cstSales);
 

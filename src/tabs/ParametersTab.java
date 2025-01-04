@@ -43,9 +43,7 @@ public class ParametersTab {
 		// Ajouter un utilisateur
 
 		// Création du bouton
-		JButton addUserButton = new JButton("Ajouter un utilisateur");
-		addUserButton.setForeground(grisDoux);
-		addUserButton.setBackground(jauneDoux);
+		JButton addUserButton = TabManager.getButton("Ajouter un utilisateur");
 		cstParameters.gridy = 1;
 		contentPanel.add(addUserButton, cstParameters);
 
@@ -91,9 +89,7 @@ public class ParametersTab {
 		// Modifier le mot de passe
 
 		// Création du bouton
-		JButton updateUserButton = new JButton("Modifier le mot de passe");
-		updateUserButton.setForeground(grisDoux);
-		updateUserButton.setBackground(jauneDoux);
+		JButton updateUserButton = TabManager.getButton("Modifier le mot de passe");
 		cstParameters.gridy = 2;
 		contentPanel.add(updateUserButton, cstParameters);
 
@@ -116,9 +112,7 @@ public class ParametersTab {
 		// Afficher les utilisateurs
 
 		// Création de ce bouton
-		JButton viewUsersButton = new JButton("Afficher les utilisateurs");
-		viewUsersButton.setForeground(grisDoux);
-		viewUsersButton.setBackground(jauneDoux);
+		JButton viewUsersButton = TabManager.getButton("Afficher les utilisateurs");
 		cstParameters.gridy = 3;
 		contentPanel.add(viewUsersButton, cstParameters);
 
@@ -136,9 +130,7 @@ public class ParametersTab {
 		// ==============================================================
 
 		// Supprimer un utilisateur
-		JButton deleteUserButton = new JButton("Supprimer un utilisateur");
-		deleteUserButton.setForeground(grisDoux);
-		deleteUserButton.setBackground(jauneDoux);
+		JButton deleteUserButton = TabManager.getButton("Supprimer un utilisateur");
 		cstParameters.gridy = 4;
 		contentPanel.add(deleteUserButton, cstParameters);
 

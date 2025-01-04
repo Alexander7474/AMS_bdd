@@ -75,9 +75,7 @@ public class SuppliersTab {
 
 		// Bouton pour insérer un fournisseur
 
-		JButton insertSupplierButton = new JButton("Ajouter un fournisseur");
-		insertSupplierButton.setForeground(grisDoux);
-		insertSupplierButton.setBackground(jauneDoux);
+		JButton insertSupplierButton = TabManager.getButton("Ajouter un fournisseur");
 		cstSuppliers.gridy = 2;
 		contentPanel.add(insertSupplierButton, cstSuppliers);
 
@@ -124,9 +122,7 @@ public class SuppliersTab {
 
 		// Bouton pour modifier un fournisseur
 
-		JButton editSupplierButton = new JButton("Modifier un fournisseur");
-		editSupplierButton.setForeground(grisDoux);
-		editSupplierButton.setBackground(jauneDoux);
+		JButton editSupplierButton = TabManager.getButton("Modifier un fournisseur");
 		cstSuppliers.gridy = 3;
 		contentPanel.add(editSupplierButton, cstSuppliers);
 
@@ -175,9 +171,7 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
 
 		// Bouton pour supprimer un fournisseur
 
-		JButton deleteSupplierButton = new JButton("Supprimer un fournisseur");
-		deleteSupplierButton.setForeground(grisDoux);
-		deleteSupplierButton.setBackground(jauneDoux);
+		JButton deleteSupplierButton = TabManager.getButton("Supprimer un fournisseur");
 		cstSuppliers.gridy = 4;
 		contentPanel.add(deleteSupplierButton, cstSuppliers);
 
@@ -274,9 +268,7 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
 
  		// Bouton pour lier les contact
  		
- 		JButton linkContactButton = new JButton("Lier contact/fournisseur");
- 		linkContactButton.setForeground(grisDoux);
- 		linkContactButton.setBackground(jauneDoux);
+ 		JButton linkContactButton = TabManager.getButton("Lier contact/fournisseur");
  		cstSuppliers.gridy = 5;
  		cstSuppliers.gridx = 0;
  		contentPanel.add(linkContactButton, cstSuppliers);
@@ -299,9 +291,7 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
 
  	 		// Bouton pour delier les contact
  	 		
- 	 		JButton unlinkContactButton = new JButton("Délier contact/fournisseur");
- 	 		unlinkContactButton.setForeground(grisDoux);
- 	 		unlinkContactButton.setBackground(jauneDoux);
+ 	 		JButton unlinkContactButton = TabManager.getButton("Délier contact/fournisseur");
  	 		cstSuppliers.gridy = 6;
  	 		cstSuppliers.gridx = 0;
  	 		contentPanel.add(unlinkContactButton, cstSuppliers);
@@ -322,9 +312,7 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
 
 		// Bouton pour afficher les contacts
 		
-		JButton showContactButton = new JButton("Afficher tous les contact(s)");
-		showContactButton.setForeground(grisDoux);
-		showContactButton.setBackground(jauneDoux);
+		JButton showContactButton = TabManager.getButton("Afficher tous les contact(s)");
 		cstSuppliers.gridy = 4;
 		cstSuppliers.gridx = 50;
 		contentPanel.add(showContactButton, cstSuppliers);
@@ -363,9 +351,7 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
 
 		// Bouton pour ajouter un contact
 
-		JButton insertContactButton = new JButton("Ajouter un contact");
-		insertContactButton.setForeground(grisDoux);
-		insertContactButton.setBackground(jauneDoux);
+		JButton insertContactButton = TabManager.getButton("Ajouter un contact");
 		cstSuppliers.gridy = 2;
 		cstSuppliers.gridx = 50;
 		contentPanel.add(insertContactButton, cstSuppliers);
@@ -407,9 +393,7 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
 		// Bouton pour supprimer un contact
 
 		// Création d'un bouton
-		JButton deleteContactButton = new JButton("Supprimer un contact");
-		deleteContactButton.setForeground(grisDoux);
-		deleteContactButton.setBackground(jauneDoux);
+		JButton deleteContactButton = TabManager.getButton("Supprimer un contact");
 		cstSuppliers.gridy = 3;
 		cstSuppliers.gridx = 50;
 		contentPanel.add(deleteContactButton, cstSuppliers);

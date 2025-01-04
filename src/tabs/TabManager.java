@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -16,6 +17,14 @@ import javax.swing.table.TableCellRenderer;
 import swing_gui.Palette;
 
 public class TabManager {
+	
+	/**
+	 * Créé un tableau 
+	 * 
+	 * @param width
+	 * @param tableModel
+	 * @return
+	 */
 	public static JTable getTable(int width, DefaultTableModel tableModel) {
 		JTable table = new JTable(tableModel);
 
@@ -82,10 +91,30 @@ public class TabManager {
 		return table;
 	}
 	
+	/**
+	 * @brief créé une scrollPane pour un tableau
+	 * 
+	 * @param table
+	 * @return
+	 */
 	public static JScrollPane getScrollPane(JTable table) {
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		return scrollPane;
+	}
+	
+	/**
+	 * @brief créé un bouton a utiliser dans les tabs de gestion
+	 * 
+	 * @param text
+	 * @return
+	 */
+	public static JButton getButton(String text) {
+		JButton button = new JButton(text);
+		button.setForeground(Palette.TEXT_DARK);
+		button.setBackground(Palette.BUTTON_ACTIVE);
+		
+		return button;
 	}
 }
