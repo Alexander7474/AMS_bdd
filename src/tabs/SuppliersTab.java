@@ -6,7 +6,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import java.awt.*;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,6 +18,7 @@ import data.Gestion;
 import data.IData;
 import data.dependance_multi.ContactFournisseur;
 import data.entity.*;
+import swing_gui.TabManager;
 
 public class SuppliersTab {
 
@@ -29,7 +29,6 @@ public class SuppliersTab {
 		// Création des couleurs
 
 		Color grisDoux = new Color(51, 51, 51);
-		Color jauneDoux = new Color(255, 183, 77);
 
 		// ==============================================================
 

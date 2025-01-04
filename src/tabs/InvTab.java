@@ -28,6 +28,7 @@ import data.Connexion;
 import data.Gestion;
 import data.IData;
 import data.entity.LotProduit;
+import swing_gui.TabManager;
 
 public class InvTab {
 

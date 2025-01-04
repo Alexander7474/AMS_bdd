@@ -2,8 +2,6 @@ package swing_gui;
 
 import javax.swing.*;
 
-import tabs.TabManager;
-
 import java.awt.*;
 
 public class LoginApp {

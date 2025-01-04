@@ -35,6 +35,7 @@ import data.entity.Contact;
 import data.entity.Contrat;
 import data.entity.Fournisseur;
 import data.entity.LotProduit;
+import swing_gui.TabManager;
 
 public class OrdersTab {
 

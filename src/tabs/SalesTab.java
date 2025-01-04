@@ -24,6 +24,7 @@ import data.Connexion;
 import data.Gestion;
 import data.IData;
 import data.entity.Vente;
+import swing_gui.TabManager;
 
 public class SalesTab {
 

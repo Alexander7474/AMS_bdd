@@ -1,4 +1,4 @@
-package tabs;
+package swing_gui;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -13,8 +13,6 @@ import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-
-import swing_gui.Palette;
 
 public class TabManager {
 	

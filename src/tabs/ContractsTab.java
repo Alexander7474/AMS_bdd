@@ -35,6 +35,7 @@ import data.IData;
 import data.entity.Commande;
 import data.entity.Contrat;
 import swing_gui.Palette;
+import swing_gui.TabManager;
 
 public class ContractsTab {
 

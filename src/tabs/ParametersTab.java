@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import swing_gui.TabManager;
 import swing_gui.UserManager;
 
 public class ParametersTab {

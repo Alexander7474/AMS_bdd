@@ -5,28 +5,19 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
-import data.Connexion;
-import data.IData;
 import data.entity.Produit;
-import data.entity.Vente;
 import statistic.Statistic;
+import swing_gui.TabManager;
 
 
 
@@ -143,7 +134,6 @@ public class StatsTab {
 		        for (int y = 0; y < 30; y++) {
 		            // Calculer la date - 1 jour
 		            LocalDate date = aujourdHui.minusDays(y);
-		            System.out.println(date);
 		            tableModel.addRow(new Object[] { Date.valueOf(date), Statistic.getJournalyPerte(Date.valueOf(date)) + "€" });
 		        }
 		        break;

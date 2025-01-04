@@ -19,6 +19,7 @@ import data.Gestion;
 import data.IData;
 import data.dependance_multi.ProduitFournisseur;
 import data.entity.*;
+import swing_gui.TabManager;
 
 public class ProductsTab {
 
