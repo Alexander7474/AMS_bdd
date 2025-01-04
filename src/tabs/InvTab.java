@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -69,26 +70,7 @@ public class InvTab {
 
 		// Création de la List dans laquelle seront stockées les LotProduits (exemple)
 
-		List<LotProduit> InvList = new ArrayList<>();
-
-		// !!! TEST SQL !!!
-		Date testInventoryDate = new Date(0);
-		LotProduit testInventory = new LotProduit(10, 5, 25, testInventoryDate, 1);
-		InvList.add(testInventory);
-
-		// Récupérations des informations dans la BDD
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try (ResultSet rs = statement.executeQuery("SELECT * FROM lot_produit")) {
-				while (rs.next()) {
-					LotProduit lp = new LotProduit(rs);
-					InvList.add(lp);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Vector<IData> InvList = Gestion.getAllFromTable("lot_produit", new LotProduit());
 
 		// ==============================================================
 
@@ -106,10 +88,10 @@ public class InvTab {
 			}
 		}
 
-		JTable InvTable = new JTable(tableModelInv);
-		JScrollPane scrollPaneInv = new JScrollPane(InvTable);
+		JTable InvTable = TabManager.getTable(500, tableModelInv);
 		cstInv.gridy = 1;
-		contentPanel.add(scrollPaneInv, cstInv);
+		
+		contentPanel.add(TabManager.getScrollPane(InvTable), cstInv);
 
 		// ==============================================================
 
@@ -234,17 +216,13 @@ public class InvTab {
 
 		// Création du tableau pour le panier du client
 		String[] columnNamesCart = { "ID produit", "Nom produit", "Prix unitaire", "Quantité", "Total" }; // Création
-																											// des
-																											// colonnes
-																											// du panier
-																											// du client
 
 		DefaultTableModel tableModelCart = new DefaultTableModel(columnNamesCart, 0); // Création du tableau
 
-		JTable cartTable = new JTable(tableModelCart);
-		JScrollPane scrollPaneCart = new JScrollPane(cartTable);
+		JTable cartTable = TabManager.getTable(500, tableModelCart);
 		cstCart.gridy = 1;
-		contentPanel.add(scrollPaneCart, cstCart);
+		
+		contentPanel.add(TabManager.getScrollPane(cartTable), cstCart);
 
 		// ==============================================================
 
@@ -348,7 +326,7 @@ public class InvTab {
 					double diffQuantity = newQuantity - selectedCartItem.getQuantite();
 					selectedCartItem.setQuantite(newQuantity);
 					LotProduit originalProduct = (LotProduit) InvList.stream()
-							.filter(lp -> lp.getIdProduit() == selectedCartItem.getIdLotProduit()).findFirst()
+							.filter(lp -> ((LotProduit) lp).getIdProduit() == selectedCartItem.getIdLotProduit()).findFirst()
 							.orElse(null);
 					if (originalProduct != null) {
 						originalProduct.setQuantite(originalProduct.getQuantite() - diffQuantity);
@@ -388,7 +366,7 @@ public class InvTab {
 
 				LotProduit selectedCartItem = (LotProduit) cartList.get(selectedRow);
 				LotProduit originalProduct = (LotProduit) InvList.stream().filter(
-						lp -> lp instanceof LotProduit && lp.getIdLotProduit() == selectedCartItem.getIdLotProduit())
+						lp -> lp instanceof LotProduit && ((LotProduit) lp).getIdLotProduit() == selectedCartItem.getIdLotProduit())
 						.findFirst().orElse(null);
 
 				if (originalProduct != null) {

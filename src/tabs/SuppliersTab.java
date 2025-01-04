@@ -48,41 +48,28 @@ public class SuppliersTab {
 
 		// Afficher les fournisseurs dans un tableau
 
-		String[] columnNames = { "SIRET", "Nom", "Adresse", "Téléphone", "Email" }; // Colonnes du tableau
-		Vector<IData> data = new Vector<>(); // Les fournisseurs seront dans le vecteur data
-
-		// recup des info dans la base
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try (ResultSet rs = statement.executeQuery("SELECT * FROM fournisseur")) {
-				while (rs.next()) {
-					Fournisseur f = new Fournisseur(rs);
-					data.add(f);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		Vector<IData> data = Gestion.getAllFromTable("fournisseur", new Fournisseur());
  
-		Vector<Vector<String>> tableData = new Vector<>();
+		String[] columnNames = { "SIRET", "Nom", "Adresse", "Téléphone", "Email" }; // Colonnes du tableau
+		
+		DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
 		for (IData item : data) {
 			if (item instanceof Fournisseur fournisseur) {
-				Vector<String> row = new Vector<>();
-				row.add(fournisseur.getSiret());
-				row.add(fournisseur.getNom());
-				row.add(fournisseur.getAdresse());
-				row.add(fournisseur.getNumero_tel());
-				row.add(fournisseur.getEmail());
-				tableData.add(row);
+				tableModel.addRow(new Object[] {
+						fournisseur.getSiret(),
+						fournisseur.getNom(),
+						fournisseur.getAdresse(),
+						fournisseur.getNumero_tel(),
+						fournisseur.getEmail()
+				});
 			}
 		}
-
-		JTable suppliersTable = new JTable(tableData, new Vector<>(List.of(columnNames)));
-		JScrollPane scrollPane = new JScrollPane(suppliersTable);
+		JTable suppliersTable = TabManager.getTable(500, tableModel);
 		cstSuppliers.gridy = 1;
-		contentPanel.add(scrollPane, cstSuppliers);
+		
+		contentPanel.add(TabManager.getScrollPane(suppliersTable), cstSuppliers);
 
 		// ==============================================================
 
@@ -152,16 +139,17 @@ public class SuppliersTab {
 				return;
 			}
 
-			Vector<String> row = tableData.get(selectedRow); // Le fournisseur a modifié est stocké dans un vecteur
-																// (row)
-			// Récupération des données de ce fournisseur
-			JTextField nomField = new JTextField(row.get(1));
-			JTextField adresseField = new JTextField(row.get(2));
-			JTextField numeroTelField = new JTextField(row.get(3));
-			JTextField emailField = new JTextField(row.get(4));
+Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
+			
+			// Récupération des données de ce Fournisseur
+			JTextField nomField = new JTextField(selectedF.getNom());
+			JTextField adresseField = new JTextField(selectedF.getAdresse());
+			JTextField numeroTelField = new JTextField(selectedF.getNumero_tel());
+			JTextField emailField = new JTextField(selectedF.getEmail());
+
 
 			// Créer un objet fournisseur pour update
-			Fournisseur oldSupplier = new Fournisseur(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4));
+			Fournisseur oldSupplier = new Fournisseur(selectedF);
 
 			// Mise en forme du formulaire
 			JPanel form = new JPanel(new GridLayout(5, 2));
@@ -202,14 +190,7 @@ public class SuppliersTab {
 			}
 
 			// Récupération des données du fournisseur
-			String siret = tableData.get(selectedRow).get(0);
-			String nom = tableData.get(selectedRow).get(1);
-			String adresse = tableData.get(selectedRow).get(2);
-			String telephone = tableData.get(selectedRow).get(3);
-			String email = tableData.get(selectedRow).get(4);
-
-			// Création du fournisseur à supprimer
-			Fournisseur supplierToDelete = new Fournisseur(siret, nom, adresse, telephone, email);
+			Fournisseur supplierToDelete = (Fournisseur) data.get(selectedRow);
 
 			int confirm = JOptionPane.showConfirmDialog(frame, "Êtes-vous sûr de vouloir supprimer ce fournisseur ?",
 					"Confirmation", JOptionPane.YES_NO_OPTION);
@@ -241,10 +222,10 @@ public class SuppliersTab {
 
 		String[] columnNamesContact = { "ID contact" , "Nom", "Prénom" , "Téléphone", "Email"};
 		DefaultTableModel tableModelContact = new DefaultTableModel(columnNamesContact, 0);
-		JTable contactTable = new JTable(tableModelContact);
-		JScrollPane scrollPaneContact = new JScrollPane(contactTable);
+		JTable contactTable = TabManager.getTable(500, tableModelContact);
 		cstContact.gridy = 1;
-		contentPanel.add(scrollPaneContact, cstContact);
+		
+		contentPanel.add(TabManager.getScrollPane(contactTable), cstContact);
 		
 		List<IData> contactsList = new ArrayList<>(); 
 		
@@ -267,7 +248,7 @@ public class SuppliersTab {
 						try (ResultSet rs = statement.executeQuery("SELECT c.* "
 								+ "FROM contact_fournisseur cf "
 								+ "JOIN contact c ON cf.id_contact = c.id_contact "
-								+ "WHERE siret = '" + tableData.get(selectedRowC).get(0) + "'")) {
+								+ "WHERE siret = '" + ((Fournisseur) data.get(selectedRowC)).getSiret() + "'")) {
 							while (rs.next()) {
 								Contact c = new Contact(rs);
 								contactsList.add(c);
@@ -285,7 +266,7 @@ public class SuppliersTab {
 					}
 				}
 				
-				titleLabelContact.setText("Onglet des Contacts ("+tableData.get(selectedRowC).get(1)+")");
+				titleLabelContact.setText("Onglet des Contacts ("+((Fournisseur) data.get(selectedRowC)).getSiret()+")");
         	}
         });
         

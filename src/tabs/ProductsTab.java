@@ -45,31 +45,33 @@ public class ProductsTab {
 		contentPanel.add(titleLabelSuppliers, cstSuppliers);
 
 		// ==============================================================
+		// recup des infos sur les fournisseurs 
+		
+		Vector<IData> data = Gestion.getAllFromTable("fournisseur", new Fournisseur());
+		
+		// ==============================================================
 
 		// Afficher les Fournisseurs dans un tableau
 
 		String[] columnNames = { "SIRET", "Nom", "Adresse", "Téléphone", "Email" }; // Colonnes du tableau
-		
-		Vector<IData> data = Gestion.getAllFromTable("fournisseur", new Fournisseur());
- 
-		Vector<Vector<String>> tableData = new Vector<>();
+		DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
 
 		for (IData item : data) {
 			if (item instanceof Fournisseur fournisseur) {
-				Vector<String> row = new Vector<>();
-				row.add(fournisseur.getSiret());
-				row.add(fournisseur.getNom());
-				row.add(fournisseur.getAdresse());
-				row.add(fournisseur.getNumero_tel());
-				row.add(fournisseur.getEmail());
-				tableData.add(row);
+				tableModel.addRow(new Object[] {
+						fournisseur.getSiret(),
+						fournisseur.getNom(),
+						fournisseur.getAdresse(),
+						fournisseur.getNumero_tel(),
+						fournisseur.getEmail()
+				});
 			}
 		}
 
-		JTable suppliersTable = new JTable(tableData, new Vector<>(List.of(columnNames)));
-		JScrollPane scrollPane = new JScrollPane(suppliersTable);
+		JTable suppliersTable = TabManager.getTable(500, tableModel);
 		cstSuppliers.gridy = 1;
-		contentPanel.add(scrollPane, cstSuppliers);
+		
+		contentPanel.add(TabManager.getScrollPane(suppliersTable), cstSuppliers);
 
 		// ==============================================================
 
@@ -139,16 +141,16 @@ public class ProductsTab {
 				return;
 			}
 
-			Vector<String> row = tableData.get(selectedRow); // Le Fournisseur a modifié est stocké dans un vecteur
-																// (row)
+			Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
+			
 			// Récupération des données de ce Fournisseur
-			JTextField nomField = new JTextField(row.get(1));
-			JTextField adresseField = new JTextField(row.get(2));
-			JTextField numeroTelField = new JTextField(row.get(3));
-			JTextField emailField = new JTextField(row.get(4));
+			JTextField nomField = new JTextField(selectedF.getNom());
+			JTextField adresseField = new JTextField(selectedF.getAdresse());
+			JTextField numeroTelField = new JTextField(selectedF.getNumero_tel());
+			JTextField emailField = new JTextField(selectedF.getEmail());
 
 			// Créer un objet Fournisseur pour update
-			Fournisseur oldSupplier = new Fournisseur(row.get(0), row.get(1), row.get(2), row.get(3), row.get(4));
+			Fournisseur oldSupplier = new Fournisseur(selectedF);
 
 			// Mise en forme du formulaire
 			JPanel form = new JPanel(new GridLayout(5, 2));
@@ -205,11 +207,7 @@ public class ProductsTab {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		});
-
-		// ==============================================================
-
-		
+		});	
 		
 		
 		//===============================================================
@@ -221,26 +219,27 @@ public class ProductsTab {
 		cstProduit.gridx = 50;
 		cstProduit.insets = new Insets(10, 10, 10, 10);
 		contentPanel.add(titleLabelProduit, cstProduit);
+		
+		//===============================================================
 
 		String[] columnNamesProduit = { "ID Produit" , "Nom", "Description" , "Catégorie"};
 		DefaultTableModel tableModelProduit = new DefaultTableModel(columnNamesProduit, 0);
-		JTable produitTable = new JTable(tableModelProduit);
-		JScrollPane scrollPaneProduit = new JScrollPane(produitTable);
+		JTable produitTable = TabManager.getTable(500, tableModelProduit);
 		cstProduit.gridy = 1;
-		contentPanel.add(scrollPaneProduit, cstProduit);
+		
+		contentPanel.add(TabManager.getScrollPane(produitTable), cstProduit);
 		
 		List<IData> produitsList = new ArrayList<>(); 
 		
 		ListSelectionModel selectionModel = suppliersTable.getSelectionModel();
         selectionModel.addListSelectionListener(new ListSelectionListener() {
-        	
-  
-        	@Override
-        	public void valueChanged(ListSelectionEvent ev) {
-        		
-        		tableModelProduit.setRowCount(0);
-        		produitsList.clear();
-        	
+	        	
+	    	@Override
+	    	public void valueChanged(ListSelectionEvent ev) {
+	    		
+	    		tableModelProduit.setRowCount(0);
+	    		produitsList.clear();
+	    	
 				int selectedRowC = suppliersTable.getSelectedRow();
 				if (selectedRowC != -1) {
 					// recup des info dans la base
@@ -250,7 +249,7 @@ public class ProductsTab {
 						try (ResultSet rs = statement.executeQuery("SELECT c.* "
 								+ "FROM produit_fournisseur cf "
 								+ "JOIN produit c ON cf.id_produit = c.id_produit "
-								+ "WHERE siret = '" + tableData.get(selectedRowC).get(0) + "'")) {
+								+ "WHERE siret = '" + ((Fournisseur) data.get(selectedRowC)).getSiret() + "'")) {
 							while (rs.next()) {
 								Produit p = new Produit(rs);
 								produitsList.add(p);
@@ -267,9 +266,9 @@ public class ProductsTab {
 						}
 					}
 					
-					titleLabelProduit.setText("Onglet des Produits ("+tableData.get(selectedRowC).get(1)+")");
+					titleLabelProduit.setText("Onglet des Produits ("+ ((Fournisseur) data.get(selectedRowC)).getSiret() +")");
 				}
-        	}
+	    	}
         });
         
      // ==============================================================

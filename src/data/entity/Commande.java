@@ -120,6 +120,10 @@ public class Commande implements IData{
 		createStruct();
 	}
 
+	public Commande() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getIdProduit() {
 		return idProduit;
 	}

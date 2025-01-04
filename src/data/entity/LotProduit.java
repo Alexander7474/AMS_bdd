@@ -145,6 +145,10 @@ public class LotProduit implements IData {
 		createStruct();
 	}
 
+	public LotProduit() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getIdProduit() {
 		return idProduit;
 	}

@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -68,23 +69,9 @@ public class OrdersTab {
 		contentPanel.add(titleLabelPurchase, cstPurchase);
 
 		// ==============================================================
-
 		// Création de la List dans laquelle seront stockées les commandes
 
-		List<IData> ordersList = new ArrayList<>(); 
-		// recup des info dans la base
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try(ResultSet rs = statement.executeQuery("SELECT * FROM commande")){
-				while(rs.next()) {
-					Commande c = new Commande(rs);
-					ordersList.add(c);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Vector<IData> ordersList = Gestion.getAllFromTable("commande", new Commande());
 
 		// ==============================================================
 
@@ -95,44 +82,30 @@ public class OrdersTab {
 
 		for (IData item : ordersList) {
 			if (item instanceof Commande commande) {
-				tableModelOrders
-						.addRow(new Object[] { commande.getIdCommande() , commande.getIdProduit(), commande.getSiret(), commande.getQuantite() });
+				tableModelOrders.addRow(new Object[] { commande.getIdCommande() , 
+						commande.getIdProduit(), 
+						commande.getSiret(), 
+						commande.getQuantite() });
 			}
 		}
 
-		JTable ordersTable = new JTable(tableModelOrders);
-		JScrollPane scrollPaneOrders = new JScrollPane(ordersTable);
+		JTable ordersTable = TabManager.getTable(500, tableModelOrders);
+		
 		cstOrders.gridy = 1;
-		contentPanel.add(scrollPaneOrders, cstOrders);
+		contentPanel.add(TabManager.getScrollPane(ordersTable), cstOrders);
 		
 
 		// ==============================================================
-		// ==============================================================
-		
-
-
-		String[] columnNamesPurchase = { "ID achat" , "ID commande", "Prix achat Unitaire", "Date achat"};
-		DefaultTableModel tableModelPurchase = new DefaultTableModel(columnNamesPurchase, 0);
 		// Création de la List dans laquelle seront stockées les achats
-
-		List<IData> purchasesList = new ArrayList<>(); 
-		// recup des info dans la base
-		try {
-			Statement statement = Connexion.getConnexion().createStatement();
-			try(ResultSet rs = statement.executeQuery("SELECT * FROM achat")){
-				while(rs.next()) {
-					Achat a = new Achat(rs);
-					purchasesList.add(a);
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		Vector<IData> purchasesList = Gestion.getAllFromTable("achat", new Achat());
 
 		// ==============================================================
 
 		// Affichage d'un tableau des achats
+		
+		String[] columnNamesPurchase = { "ID achat" , "ID commande", "Prix achat Unitaire", "Date achat"};
+		DefaultTableModel tableModelPurchase = new DefaultTableModel(columnNamesPurchase, 0);
 
 		for (IData item : purchasesList) {
 			if (item instanceof Achat achat) {
@@ -141,15 +114,13 @@ public class OrdersTab {
 			}
 		}
 
-		JTable purchaseTable = new JTable(tableModelPurchase);
-		JScrollPane scrollPanePurchase = new JScrollPane(purchaseTable);
+		JTable purchaseTable = TabManager.getTable(500, tableModelPurchase);
 		cstPurchase.gridy = 1;
-		contentPanel.add(scrollPanePurchase, cstPurchase);
+		
+		contentPanel.add(TabManager.getScrollPane(purchaseTable), cstPurchase);
 		
 
 		// ==============================================================
-		// ==============================================================
-
 		// Bouton pour passer une commande
 
 		// Création du bouton

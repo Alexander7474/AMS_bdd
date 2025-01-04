@@ -98,8 +98,8 @@ public class LoginApp {
 
 			// !!! A MODIFIER J'AI MIS UN AUTOLOADER !!!
 			// Récupération des champs
-			String username = userText.getText();
-			String password = new String(passwordText.getPassword());
+			String username = "admin";  //userText.getText();
+			String password = "admin"; //new String(passwordText.getPassword());
 
 			if ((username.isEmpty()) || (password.isEmpty())) {
 				messageLabel.setText("Les champs ne peuvent pas être vides");

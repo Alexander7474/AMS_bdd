@@ -129,6 +129,16 @@ public class Fournisseur implements IData{
 		}
 	}
 	
+	public Fournisseur(Fournisseur f) {
+		createStruct();
+		
+		this.siret = f.siret;
+		this.nom = f.nom;
+		this.adresse = f.adresse;
+		this.email = f.email;
+		this.numeroTel = f.numeroTel;
+	}
+
 	@Override 
 	public IData build(ResultSet rs) {
 		return new Fournisseur(rs);

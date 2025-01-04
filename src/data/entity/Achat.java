@@ -122,6 +122,10 @@ public class Achat implements IData{
 		createStruct();
 	}
 
+	public Achat() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getIdCommande() {
 		return idCommande;
 	}
