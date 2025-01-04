@@ -283,9 +283,11 @@ public class ProductsTab {
  			
  			if (selectedRowC != -1 && selectedRowS != -1) {
  				
- 				ProduitFournisseur pf = new ProduitFournisseur((Produit) produitsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS), 4.0);
+ 				ProduitFournisseur pf = new ProduitFournisseur((Produit) produitsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS), 0.0);
  				
  				Gestion.insert(pf, "produit_fournisseur");
+ 				
+ 				JOptionPane.showMessageDialog(frame, "Fournisseur lié au produit avec succès !");
  			}
  		});
  		
@@ -304,9 +306,12 @@ public class ProductsTab {
  	 			int selectedRowC = produitTable.getSelectedRow();
  	 			int selectedRowS = suppliersTable.getSelectedRow();
  	 			if (selectedRowC != -1 && selectedRowS != -1) {
- 	 				ProduitFournisseur cf = new ProduitFournisseur((Produit) produitsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS) ,4.0);
- 	 				
- 	 				Gestion.delete(cf, "produit_fournisseur");
+ 	 				ProduitFournisseur cf = new ProduitFournisseur((Produit) produitsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS) , 0.0);
+
+					Gestion.delete(cf, "produit_fournisseur");
+					
+					JOptionPane.showMessageDialog(frame, "Fournisseur délié au produit avec succès !");
+					tableModelProduit.removeRow(selectedRowC);
  	 			}
  	 		});
         
@@ -408,13 +413,6 @@ public class ProductsTab {
 			// Récupération du Produit
 			Produit selectedProduit = (Produit) produitsList.get(selectedRow);
 
-			try {
-				Gestion.execute("DELETE FROM produit_fournisseur WHERE id_produit = " + selectedProduit.getIdProduit());
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			Gestion.delete(selectedProduit, "produit");
 
 		});

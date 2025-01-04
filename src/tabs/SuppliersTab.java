@@ -15,6 +15,7 @@ import java.util.Vector;
 
 import data.Connexion;
 import data.Gestion;
+import data.GestionException;
 import data.IData;
 import data.dependance_multi.ContactFournisseur;
 import data.entity.*;
@@ -283,6 +284,8 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
  				ContactFournisseur cf = new ContactFournisseur((Contact) contactsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS));
  				
  				Gestion.insert(cf, "contact_fournisseur");
+ 				
+ 				JOptionPane.showMessageDialog(frame, "Fournisseur lié au contact avec succès !");
  			}
  		});
  		
@@ -304,6 +307,8 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
  	 				ContactFournisseur cf = new ContactFournisseur((Contact) contactsList.get(selectedRowC), (Fournisseur) data.get(selectedRowS));
  	 				
  	 				Gestion.delete(cf, "contact_fournisseur");
+ 	 				JOptionPane.showMessageDialog(frame, "Fournisseur délié au contact avec succès !");
+ 	 				tableModelContact.removeRow(selectedRowC);
  	 			}
  	 		});
         
@@ -409,13 +414,6 @@ Fournisseur selectedF = (Fournisseur) data.get(selectedRow);
 			// Récupération du contact
 			Contact selectedContact = (Contact) contactsList.get(selectedRow);
 
-			try {
-				Gestion.execute("DELETE FROM contact_fournisseur WHERE id_contact = " + selectedContact.getIdContact());
-				
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			Gestion.delete(selectedContact, "contact");
 
 		});

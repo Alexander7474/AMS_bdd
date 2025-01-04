@@ -256,6 +256,7 @@ public class OrdersTab {
 						Achat achat = new Achat(selectedCommande.getIdCommande(), achatPrice, new Date(System.currentTimeMillis()));
 						
 						int achatId = Gestion.insert(achat, "achat"); // Ajout de la commande transformée en achat dans la table achat
+						System.out.println();
 						
 						//commande acheté donc nouveau lot de produit avec comme prix de vente unitaire par défault le prix d'achat + 25%
 						LotProduit lp = new LotProduit(selectedCommande.getIdProduit(), 

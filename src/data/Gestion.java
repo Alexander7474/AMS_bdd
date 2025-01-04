@@ -177,8 +177,10 @@ public class Gestion {
 			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);) {
 				data.composeStatement(statement);
 				statement.executeUpdate();
+				
+				//renvoie de la valeur serial généré par la table (utile dans certain cas)
 				ResultSet rs = statement.getGeneratedKeys();
-				if(rs.next()) {
+				if(rs.next() && !rs.getMetaData().getColumnName(1).equalsIgnoreCase("siret")) {
 					return rs.getInt(1);
 				}else {
 					return -1;
@@ -200,6 +202,13 @@ public class Gestion {
 		return -1;
 	}
 	
+	/**
+	 * @author Alexandre LANTERNIER
+	 * @brief supprime un objet dans la base
+	 * 
+	 * @param data
+	 * @param table
+	 */
 	public static void delete(IData data, String table) {
 		
 		//on récupère la map de filedType de la table
@@ -216,7 +225,7 @@ public class Gestion {
 			String query = "DELETE FROM "+ table + " WHERE " + data.getValuesEq();
 			try(PreparedStatement statement = Connexion.getConnexion().prepareStatement(query);) {
 				data.composeStatementEq(statement);
-				statement.executeUpdate();
+				int x = statement.executeUpdate();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -233,6 +242,7 @@ public class Gestion {
 	}
 	
 	/**
+	 * @author Alexandre LANTERNIER
 	 * @brief Permet de mettre a jour un table de la base
 	 * 
 	 * @param newOne Nouvelle objet
@@ -271,6 +281,7 @@ public class Gestion {
 	}
 	
 	/**
+	 * @author Alexandre LANTERNIER
 	 * @brief Permet de mettre a jour un table de la base
 	 * 
 	 * @param newOne Nouvelle objet
@@ -334,6 +345,7 @@ public class Gestion {
 	}
 	
 	/**
+	 * @author Alexandre LANTERNIER
 	 * @brief méthode à utiliser au démarrage de l'application pour faire certaine automatisation
 	 * 
 	 * @details Détection des lots de produits périmé(s) / ...

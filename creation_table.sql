@@ -119,11 +119,11 @@ INSERT INTO produit(nom,description,categorie) VALUES ('bannane','bannananananan
 INSERT INTO produit(nom,description,categorie) VALUES ('soda','1L of soda','drink');
 INSERT INTO produit(nom,description,categorie) VALUES ('steak','300g de steak','meat');
 
-INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (1,'11111111111111',8.0);
-INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (2,'33333333333333',8.0);
-INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (3,'11111111111111',8.0);
-INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (2,'22222222222222',8.0);
-INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (4,'22222222222222',8.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (1,'11111111111111',0.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (2,'33333333333333',0.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (3,'11111111111111',0.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (2,'22222222222222',0.0);
+INSERT INTO produit_fournisseur(id_produit,siret,prix_vente_uni) VALUES (4,'22222222222222',0.0);
 
 INSERT INTO commande(id_produit,siret,quantite) VALUES (1,'11111111111111',89.0);
 INSERT INTO commande(id_produit,siret,quantite) VALUES (3,'11111111111111',200.0);
